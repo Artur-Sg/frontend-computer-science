@@ -1,13 +1,23 @@
 const assignments = [
   {
     id: 'hw-01',
-    title: 'ДЗ 01 — Кодирование',
-    taskPath: 'lectures/01-encoding/homework.md',
-    solutionPath: 'lectures/01-encoding/solution.html',
+    title: 'ДЗ №1. Кодирование',
+    taskPath: 'lectures/01-encoding/homework/homework.md',
+    solutionPath: 'lectures/01-encoding/homework/solution.html',
     solutionScripts: [
-      'lectures/01-encoding/naive-codec.js',
-      'lectures/01-encoding/prefix-codec.js',
-      'lectures/01-encoding/solution.js'
+      'lectures/01-encoding/homework/naive-codec.js',
+      'lectures/01-encoding/homework/prefix-codec.js',
+      'lectures/01-encoding/homework/solution.js'
+    ]
+  },
+  {
+    id: 'hw-02',
+    title: 'ДЗ №2. Интерпретатор байткода',
+    taskPath: 'lectures/02-languages/homework/homework.md',
+    solutionPath: 'lectures/02-languages/homework/solution.html',
+    solutionScripts: [
+      'lectures/02-languages/homework/execute.js',
+      'lectures/02-languages/homework/solution.js'
     ]
   }
 ];
@@ -60,6 +70,7 @@ function renderMarkdown(md) {
   const html = [];
   let i = 0;
   let inCode = false;
+  let codeLines = [];
 
   while (i < lines.length) {
     const line = lines[i];
@@ -67,17 +78,19 @@ function renderMarkdown(md) {
     if (line.trim().startsWith('```')) {
       if (!inCode) {
         inCode = true;
-        html.push('<pre><code>');
+        codeLines = [];
       } else {
         inCode = false;
-        html.push('</code></pre>');
+        while (codeLines.length && codeLines[0].trim() === '') codeLines.shift();
+        while (codeLines.length && codeLines[codeLines.length - 1].trim() === '') codeLines.pop();
+        html.push(`<pre><code>${escapeHtml(codeLines.join('\n'))}</code></pre>`);
       }
       i++;
       continue;
     }
 
     if (inCode) {
-      html.push(escapeHtml(line));
+      codeLines.push(line);
       i++;
       continue;
     }

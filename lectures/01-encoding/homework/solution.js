@@ -12,7 +12,7 @@
   if (!window.NaiveCodec || !window.PrefixCodec) return;
   if (!window.renderMarkdown) return;
 
-  fetch('lectures/01-encoding/solution.md')
+  fetch('lectures/01-encoding/homework/solution.md')
     .then((res) => res.text())
     .then((md) => {
       if (descEl) descEl.innerHTML = window.renderMarkdown(md);

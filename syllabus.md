@@ -3,10 +3,14 @@
 1. Лекция 01 — Вычислители и кодирование информации
    - Теория: `lectures/01-encoding/theory.md`
    - Практика: `lectures/01-encoding/practice.md`
-   - ДЗ: `lectures/01-encoding/homework.md`
-   - Решение: `lectures/01-encoding/solution.md`
+   - ДЗ: `lectures/01-encoding/homework/homework.md`
+   - Решение: `lectures/01-encoding/homework/solution.md`
 
-2. Языки программирования. Исходный код, машинный код, байткод. Способы интерпретации кода. Runtime. Типизация в языках программирования.
+2. Лекция 02 — Языки программирования и исполнение кода
+   - Теория: `lectures/02-languages/theory.md`
+   - Практика: `lectures/02-languages/practice.md`
+   - ДЗ: `lectures/02-languages/homework/homework.md`
+   - Решение: `lectures/02-languages/homework/solution.md`
 3. Кодирование чисел. Целые числа. Числа с плавающей точкой. Числовые типы в JS.
 4. Операции над битами. Побитовые операторы JS. Побитовое умножение и деление. Битовые маски.
 5. Процессор и память. Адресация памяти и разрядность процессора. Кэш-память.
