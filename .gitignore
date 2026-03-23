@@ -1,0 +1,16 @@
+node_modules/
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.dist/
+dist/
+.build/
+build/
+.cache/
+.tmp/
+coverage/
+.vscode/
+.idea/

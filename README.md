@@ -1,1 +1,3 @@
-# frontend-computer-science
+# CS Frontend
+
+План курса: `syllabus.md`
