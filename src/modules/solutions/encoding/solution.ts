@@ -1,34 +1,40 @@
-(function () {
-  const inputEl = document.getElementById('input');
-  const naiveOutEl = document.getElementById('naive-output');
-  const smartOutEl = document.getElementById('smart-output');
-  const naiveMetaEl = document.getElementById('naive-meta');
-  const smartMetaEl = document.getElementById('smart-meta');
-  const errorsEl = document.getElementById('errors');
-  const modeEls = Array.from(document.querySelectorAll('input[name="mode"]'));
-  const descEl = document.getElementById('solution-description');
+import { renderMarkdown } from '#shared/markdown';
+import templateHtml from './solution.html?raw';
+import styles from './solution.css?raw';
+import { decode as decodeNaive, encode as encodeNaive } from './naive-codec';
+import { decode as decodePrefix, encode as encodePrefix } from './prefix-codec';
 
-  if (!inputEl || !naiveOutEl || !smartOutEl) return;
-  if (!window.NaiveCodec || !window.PrefixCodec) return;
-  if (!window.renderMarkdown) return;
+export const template = `<style>${styles}</style>${templateHtml}`;
+
+export function init(root: HTMLElement): void {
+  const inputEl = root.querySelector<HTMLTextAreaElement>('#input');
+  const naiveOutEl = root.querySelector<HTMLElement>('#naive-output');
+  const smartOutEl = root.querySelector<HTMLElement>('#smart-output');
+  const naiveMetaEl = root.querySelector<HTMLElement>('#naive-meta');
+  const smartMetaEl = root.querySelector<HTMLElement>('#smart-meta');
+  const errorsEl = root.querySelector<HTMLElement>('#errors');
+  const modeEls = Array.from(root.querySelectorAll<HTMLInputElement>('input[name="mode"]'));
+  const descEl = root.querySelector<HTMLElement>('#solution-description');
+
+  if (!inputEl || !naiveOutEl || !smartOutEl || !naiveMetaEl || !smartMetaEl || !errorsEl) {return;}
 
   fetch('lectures/01-encoding/homework/solution.md')
     .then((res) => res.text())
     .then((md) => {
-      if (descEl) descEl.innerHTML = window.renderMarkdown(md);
+      if (descEl) {descEl.innerHTML = renderMarkdown(md);}
     })
     .catch(() => {
-      if (descEl) descEl.textContent = 'Не удалось загрузить описание решения.';
+      if (descEl) {descEl.textContent = 'Не удалось загрузить описание решения.';}
     });
 
-  function render() {
+  function render(): void {
     const mode = modeEls.find((el) => el.checked)?.value || 'encode';
     const text = inputEl.value || '';
-    let errors = [];
+    let errors: string[] = [];
 
     if (mode === 'encode') {
-      const naive = window.NaiveCodec.encode(text);
-      const smart = window.PrefixCodec.encode(text);
+      const naive = encodeNaive(text);
+      const smart = encodePrefix(text);
 
       naiveOutEl.textContent = naive.output;
       smartOutEl.textContent = smart.output;
@@ -36,8 +42,8 @@
       smartMetaEl.textContent = `Длина: ${smart.bits.length} бит`;
       errors = [...naive.errors, ...smart.errors];
     } else {
-      const naive = window.NaiveCodec.decode(text);
-      const smart = window.PrefixCodec.decode(text);
+      const naive = decodeNaive(text);
+      const smart = decodePrefix(text);
 
       naiveOutEl.textContent = naive.output;
       smartOutEl.textContent = smart.output;
@@ -57,5 +63,6 @@
 а также редкие символы: «кавычки», — тире, № и %.
 Вторая строка нужна, чтобы проверить перевод строки,
 и вот табуляция:\tпосле неё идёт слово.`;
+
   render();
-})();
+}

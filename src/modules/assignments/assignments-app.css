@@ -1,0 +1,45 @@
+:host {
+  display: block;
+}
+
+header {
+  padding: 0 5px;
+}
+
+h1 {
+  margin: 12px 6px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  padding: 12px 20px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border);
+}
+
+.panel {
+  padding: 20px;
+  display: grid;
+  gap: 12px;
+}
+
+details {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+slot[name="task"],
+slot[name="solution"] {
+  display: block;
+  margin-top: 10px;
+}

@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["DOM", "ES2020"],
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "#modules/*": ["src/modules/*"],
+      "#shared/*": ["src/shared/*"],
+      "#ui/*": ["src/ui/*"],
+      "#styles/*": ["src/styles/*"],
+      "#assets/*": ["src/assets/*"]
+    },
+    "types": ["vite/client"]
+  },
+  "include": ["src"]
+}

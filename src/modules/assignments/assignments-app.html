@@ -1,0 +1,15 @@
+<header>
+  <h1>Задания по курсу</h1>
+</header>
+<div class="tabs" role="tablist" id="tabs"></div>
+<div class="panel">
+  <details id="task-details">
+    <summary>Описание задания</summary>
+    <slot name="task"></slot>
+  </details>
+
+  <details id="solution-details" open>
+    <summary>Решение</summary>
+    <slot name="solution"></slot>
+  </details>
+</div>
