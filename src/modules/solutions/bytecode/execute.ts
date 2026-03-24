@@ -5,7 +5,7 @@ export const instructions = {
   'RET': 3,
   'DEC A': 4,
   'JMP': 5,
-  'ACC A': 6
+  'INC A': 6
 } as const;
 
 export type InstructionKey = keyof typeof instructions;
@@ -47,7 +47,6 @@ export function execute(
       case instructions.RET: {
         const returnValue = program[pointer + 1];
 
-        
 return { out, returnValue };
       }
       case instructions['DEC A']: {
@@ -61,7 +60,7 @@ return { out, returnValue };
         pointer = target;
         break;
       }
-      case instructions['ACC A']: {
+      case instructions['INC A']: {
         acc += 1;
         pointer += 1;
         break;

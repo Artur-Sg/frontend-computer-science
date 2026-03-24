@@ -11,7 +11,7 @@ const instructions = {
   'RET': 3,
   'DEC A': 4,
   'JMP': 5,
-  'ACC A': 6
+  'INC A': 6
 };
 ```
 
@@ -29,7 +29,7 @@ const instructions = {
 - `RET` — вернуть следующее значение
 - `DEC A` — уменьшить `A` на 1
 - `JMP` — перейти на адрес из следующего элемента массива
-- `ACC A` — увеличить `A` на 1
+- `INC A` — увеличить `A` на 1
 
 ## Реализация
 
@@ -41,7 +41,7 @@ const instructions = {
   'RET': 3,
   'DEC A': 4,
   'JMP': 5,
-  'ACC A': 6
+  'INC A': 6
 };
 
 function execute(program) {
@@ -91,7 +91,7 @@ function execute(program) {
         break;
       }
 
-      case instructions['ACC A']: {
+      case instructions['INC A']: {
         acc += 1;
         pointer += 1;
         break;
