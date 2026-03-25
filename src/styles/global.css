@@ -1,6 +1,9 @@
 :root {
   --bg: #0f1115;
   --panel: #151923;
+  --panel-1: #151923;
+  --panel-2: #212737;
+  --panel-3: #2a3146;
   --text: #e7e7e7;
   --muted: #a7b0c0;
   --accent: #6ee7ff;
@@ -16,6 +19,22 @@ body {
   font-family: sans-serif;
   background: var(--bg);
   color: var(--text);
+}
+
+details {
+  background: var(--panel-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.content details {
+  background: var(--panel-2);
+  border-color: #3a435a;
+}
+
+.content details details {
+  background: var(--panel-3);
+  border-color: #454f69;
 }
 
 /* Markdown formatting */
@@ -86,7 +105,15 @@ body {
 }
 
 .content th {
-  background: #151923;
+  background: #0a0e17;
+}
+
+.content tbody tr {
+  background: #191e2ed8;
+}
+
+.content tbody tr:nth-child(even) {
+  background: #101623;
 }
 
 .content a {
