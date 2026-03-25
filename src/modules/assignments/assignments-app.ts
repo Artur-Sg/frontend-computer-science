@@ -18,6 +18,21 @@ export class AssignmentsApp extends HTMLElement {
 
   private activeId: string | null = null;
 
+  private loadToken = 0;
+
+  private readonly onHashChange = (): void => {
+    const id = this.getIdFromUrl();
+
+    if (!id || id === this.activeId) {
+      return;
+    }
+    const item = assignments.find((entry) => entry.id === id);
+
+    if (item) {
+      this.loadAssignment(item);
+    }
+  };
+
   constructor() {
     super();
     const root = this.attachShadow({ mode: 'open' });
@@ -42,18 +57,28 @@ export class AssignmentsApp extends HTMLElement {
     }
 
     this.renderTabs();
-    this.loadAssignment(assignments[0]);
+    this.loadAssignment(this.getInitialAssignment());
 
     this.addEventListener('tab-select', (event) => {
-      const {detail} = (event as CustomEvent<{ id: string }>);
+      const { detail } = event as CustomEvent<{ id: string }>;
       const item = assignments.find((entry) => entry.id === detail.id);
 
-      if (item) {this.loadAssignment(item);}
+      if (item) {
+        this.loadAssignment(item);
+      }
     });
+
+    window.addEventListener('hashchange', this.onHashChange);
+  }
+
+  disconnectedCallback(): void {
+    window.removeEventListener('hashchange', this.onHashChange);
   }
 
   private renderTabs(): void {
-    if (!this.tabsEl) {return;}
+    if (!this.tabsEl) {
+      return;
+    }
     this.tabsEl.innerHTML = '';
 
     for (const item of assignments) {
@@ -66,7 +91,10 @@ export class AssignmentsApp extends HTMLElement {
   }
 
   private setActive(id: string): void {
-    if (!this.tabsEl) {return;}
+    if (!this.tabsEl) {
+      return;
+    }
+
     this.activeId = id;
     for (const tab of Array.from(this.tabsEl.children)) {
       if (tab.getAttribute('tab-id') === id) {
@@ -77,20 +105,66 @@ export class AssignmentsApp extends HTMLElement {
     }
   }
 
-  private async renderContent(el: HTMLElement, path: string, text: string): Promise<void> {
-    el.innerHTML = renderMarkdown(text);
+  private getIdFromUrl(): string | null {
+    let {hash} = window.location;
+
+    try {
+      hash = decodeURIComponent(hash);
+    } catch (err) {
+      console.warn('Некорректный hash в URL, используется raw значение.', err);
+    }
+
+    const normalized = hash.replace('#', '').replace(/\/+$/, '').trim();
+
+    if (normalized) {
+      if (/^\d+$/.test(normalized)) {
+        const index = Number(normalized) - 1;
+
+        return assignments[index]?.id ?? null;
+      }
+
+      return normalized;
+    }
+
+    return null;
+  }
+
+  private getInitialAssignment(): Assignment {
+    const id = this.getIdFromUrl();
+    const found = assignments.find((entry) => entry.id === id);
+
+    return found ?? assignments[0];
+  }
+
+  private updateUrl(id: string): void {
+    const index = assignments.findIndex((entry) => entry.id === id);
+    const shortId = index >= 0 ? String(index + 1) : id;
+    const url = new URL(window.location.href);
+
+    url.hash = shortId;
+    window.history.replaceState(null, '', url);
   }
 
   private async loadAssignment(item: Assignment): Promise<void> {
-    if (!item) {return;}
+    if (!item) {
+      return;
+    }
+    const token = this.loadToken + 1;
+
+    this.loadToken = token;
+
     this.setActive(item.id);
+    this.updateUrl(item.id);
     this.taskEl.textContent = 'Загрузка...';
     this.solutionEl.textContent = 'Загрузка...';
 
     try {
       const taskText = await fetchText(item.taskPath);
 
-      await this.renderContent(this.taskEl, item.taskPath, taskText);
+      if (this.loadToken !== token) {
+        return;
+      }
+      this.taskEl.innerHTML = renderMarkdown(taskText);
     } catch (err) {
       this.taskEl.textContent = 'Не удалось загрузить файл задания.';
       console.error(err);
@@ -99,9 +173,15 @@ export class AssignmentsApp extends HTMLElement {
     try {
       const loader = solutionLoaders[item.solutionModule];
 
-      if (!loader) {throw new Error(`Нет модуля решения для ${item.solutionModule}`);}
+      if (!loader) {
+        throw new Error(`Нет модуля решения для ${item.solutionModule}`);
+      }
+
       const module = await loader();
 
+      if (this.loadToken !== token) {
+        return;
+      }
       this.solutionEl.innerHTML = module.template;
       module.init?.(this.solutionEl);
     } catch (err) {
