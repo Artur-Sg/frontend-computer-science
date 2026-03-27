@@ -101,7 +101,7 @@ export function init(root: HTMLElement): void {
       return;
     }
     if (!lastPacked) {
-      atResultEl.textContent = 'Сначала постройте packed BCD.';
+      atResultEl.textContent = 'Сначала постройте BCD.';
 
       return;
     }
