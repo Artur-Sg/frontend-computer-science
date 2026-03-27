@@ -12,6 +12,7 @@
     "test:bcd": "tsx src/modules/solutions/bcd/bcd.test.ts"
   },
   "devDependencies": {
+    "@types/node": "^25.5.0",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
     "eslint": "^8.57.0",
