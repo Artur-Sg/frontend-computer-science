@@ -1,0 +1,27 @@
+.solution {
+  display: grid;
+  gap: 8px;
+}
+
+.solution__description {
+  border: 1px solid #3a435a;
+  background: #212737;
+  border-radius: 10px;
+  padding: 6px 10px;
+}
+
+.solution__body {
+  display: grid;
+  gap: 4px;
+}
+
+.solution__body h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.solution__body p {
+  margin: 0;
+  color: #a7b0c0;
+  font-size: 12px;
+}

@@ -11,8 +11,16 @@
    - Практика: `lectures/02-languages/practice.md`
    - ДЗ: `lectures/02-languages/homework/homework.md`
    - Решение: `lectures/02-languages/homework/solution.md`
-3. Кодирование чисел. Целые числа. Числа с плавающей точкой. Числовые типы в JS.
-4. Операции над битами. Побитовые операторы JS. Побитовое умножение и деление. Битовые маски.
+3. Лекция 03 — Кодирование чисел
+   - Теория: `lectures/03-number-encoding/theory.md`
+   - Практика: `lectures/03-number-encoding/practice.md`
+   - ДЗ: `lectures/03-number-encoding/homework/homework.md`
+   - Решение: `lectures/03-number-encoding/homework/solution.md`
+4. Лекция 04 — Операции над битами
+   - Теория: `lectures/04-bit-operations/theory.md`
+   - Практика: `lectures/04-bit-operations/practice.md`
+   - ДЗ: `lectures/04-bit-operations/homework/homework.md`
+   - Решение: `lectures/04-bit-operations/homework/solution.md`
 5. Процессор и память. Адресация памяти и разрядность процессора. Кэш-память.
 6. Фундаментальные структуры данных. Массив, кортеж и структура. Связный список.
 7. ArrayBuffer и типизированные массивы в JS. Кодирование и декодирование бинарных данных.

@@ -1,0 +1,47 @@
+<section class="solution">
+  <details class="solution__description">
+    <summary>Описание решения</summary>
+    <div id="solution-description">Загрузка описания...</div>
+  </details>
+
+  <header class="solution__header">
+    <div class="solution__title">
+      <h2>BCD 8421</h2>
+      <p>Упаковка числа в BCD.</p>
+    </div>
+  </header>
+
+  <div class="solution__input">
+    <label for="bcd-input" class="label">Число</label>
+    <div class="input-row">
+      <input id="bcd-input" type="text" value="65536" />
+    </div>
+    <div class="hint">Только неотрицательные целые. Пример: 65536, 1234567890.</div>
+  </div>
+
+  <div class="solution__grid">
+    <div class="card">
+      <div class="card__title">Нормализация</div>
+      <pre class="card__content" id="bcd-normalized"></pre>
+    </div>
+
+    <div class="card">
+      <div class="card__title">Packed BCD (байты)</div>
+      <pre class="card__content" id="bcd-bytes"></pre>
+    </div>
+
+    <div class="card">
+      <div class="card__title">toString / toNumber / toBigint</div>
+      <pre class="card__content" id="bcd-values"></pre>
+    </div>
+
+    <div class="card">
+      <div class="card__title">Проверка разряда</div>
+      <div class="at-row">
+        <label for="bcd-index" class="label">Индекс (0 — последняя цифра)</label>
+        <input id="bcd-index" type="number" value="0" />
+      </div>
+      <pre class="card__content" id="bcd-at-result"></pre>
+    </div>
+  </div>
+</section>

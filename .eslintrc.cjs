@@ -60,6 +60,12 @@ module.exports = {
       env: { browser: true }
     },
     {
+      files: ['src/modules/solutions/**/*.ts'],
+      rules: {
+        'no-bitwise': 'off'
+      }
+    },
+    {
       files: ['vite.config.ts', '**/*.config.*', '.eslintrc.cjs'],
       rules: {
         'import/no-extraneous-dependencies': ['error', { devDependencies: true }]
