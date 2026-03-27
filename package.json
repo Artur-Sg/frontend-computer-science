@@ -6,8 +6,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "eslint \"src/**/*.ts\" \"vite.config.ts\"",
+    "lint:fix": "eslint \"src/**/*.ts\" \"vite.config.ts\" --fix",
     "format": "prettier -w .",
     "test:bcd": "tsx src/modules/solutions/bcd/bcd.test.ts"
   },

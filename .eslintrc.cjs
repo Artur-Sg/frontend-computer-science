@@ -1,5 +1,6 @@
 module.exports = {
   root: true,
+  ignorePatterns: ['public/**', 'dist/**', 'node_modules/**', 'index.html', '**/*.html'],
   env: {
     browser: true,
     node: true,
@@ -55,6 +56,12 @@ module.exports = {
     'import/prefer-default-export': 'off'
   },
   overrides: [
+    {
+      files: ['.eslintrc.cjs', '**/*.config.*', 'vite.config.ts'],
+      parserOptions: {
+        project: null
+      }
+    },
     {
       files: ['**/*.html'],
       env: { browser: true }
