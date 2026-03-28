@@ -4,16 +4,17 @@
 
 button {
   border: 1px solid var(--border);
-  background: var(--panel);
+  background: var(--panel-2);
   color: var(--text);
   padding: 8px 12px;
   cursor: pointer;
   border-radius: 8px;
   font-size: 14px;
-  transition: border-color 0.15s ease, color 0.15s ease;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
 }
 
 button[data-selected="true"] {
   border-color: var(--accent);
   color: var(--accent);
+  background: var(--panel-3);
 }

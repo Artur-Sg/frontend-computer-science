@@ -1,10 +1,9 @@
 import { renderMarkdown } from '#shared/markdown';
 import templateHtml from './solution.html?raw';
-import styles from './solution.css?raw';
 import { decode as decodeNaive, encode as encodeNaive } from './naive-codec';
 import { decode as decodePrefix, encode as encodePrefix } from './prefix-codec';
 
-export const template = `<style>${styles}</style>${templateHtml}`;
+export const template = templateHtml;
 
 export function init(root: HTMLElement): void {
   const inputEl = root.querySelector<HTMLTextAreaElement>('#input');

@@ -1,9 +1,8 @@
 import { renderMarkdown } from '#shared/markdown';
 import templateHtml from './solution.html?raw';
-import styles from './solution.css?raw';
 import { instructions, execute } from './execute';
 
-export const template = `<style>${styles}</style>${templateHtml}`;
+export const template = templateHtml;
 
 export function init(root: HTMLElement): void {
   const textarea = root.querySelector<HTMLTextAreaElement>('#program');

@@ -1,9 +1,8 @@
 import { renderMarkdown } from '#shared/markdown';
 import templateHtml from './solution.html?raw';
-import styles from './solution.css?raw';
 import { cyclicLeftShift, cyclicRightShift } from './cyclic-shift';
 
-export const template = `<style>${styles}</style>${templateHtml}`;
+export const template = templateHtml;
 
 function parseValue(raw: string): number {
   const cleaned = raw.replace(/_/g, '').trim();

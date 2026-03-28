@@ -27,7 +27,7 @@ h1 {
 }
 
 details {
-  background: var(--panel);
+  background: var(--panel-2);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 10px 14px;
@@ -36,6 +36,30 @@ details {
 summary {
   cursor: pointer;
   font-weight: 700;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+summary::before {
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 10px solid var(--muted);
+  transition: transform 0.18s ease, border-left-color 0.18s ease;
+}
+
+details[open] > summary::before {
+  transform: rotate(90deg);
+  border-left-color: var(--accent);
 }
 
 slot[name="task"],

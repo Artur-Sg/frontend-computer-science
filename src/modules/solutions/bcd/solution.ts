@@ -1,9 +1,8 @@
 import { renderMarkdown } from '#shared/markdown';
 import templateHtml from './solution.html?raw';
-import styles from './solution.css?raw';
 import { BCD8421 } from './bcd';
 
-export const template = `<style>${styles}</style>${templateHtml}`;
+export const template = templateHtml;
 
 type PackedResult = {
   raw: string;
