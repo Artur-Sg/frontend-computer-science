@@ -1,8 +1,7 @@
 /* eslint-disable max-classes-per-file */
 
 export abstract class BCD {
-  // Храним число как packed BCD: в одном байте две цифры.
-  // Uint8Array гарантирует 0–255 и экономит память.
+  // Храним число как BCD: в одном байте две цифры.
   protected data: Uint8Array;
 
   constructor(num: number | bigint) {
@@ -25,23 +24,23 @@ export abstract class BCD {
 
 export class BCD8421 extends BCD {
   // Количество исходных цифр важно, чтобы корректно отбросить ведущий 0,
-  // если число упаковано в байты с добавлением нуля слева.
+  // если число упаковано в байты с добавлением нуля слева
   private digitsCount: number = 0;
 
   constructor(num: number | bigint) {
     super(num);
 
-    // Преобразуем в строку, чтобы работать с десятичными цифрами напрямую.
+    // Преобразуем в строку, чтобы работать с десятичными цифрами напрямую
     const decimal = String(num);
 
     this.digitsCount = decimal.length;
 
-    // Для packed BCD нужно чётное количество цифр.
-    // Если длина нечётная — добавляем ведущий 0.
+    // Для BCD нужно чётное количество цифр
+    // Если длина нечётная — добавляем ведущий 0
     const hasOddLength = this.digitsCount % 2 !== 0;
     const normalized = hasOddLength ? `0${decimal}` : decimal;
 
-    // В одном байте 2 цифры → длина/2 байта.
+    // В одном байте 2 цифры → длина/2 байта
     this.data = new Uint8Array(normalized.length / 2);
 
     for (let i = 0; i < normalized.length; i += 2) {
@@ -57,12 +56,10 @@ export class BCD8421 extends BCD {
   }
 
   toBigint(): bigint {
-    // Идём через строку, чтобы не потерять большие значения.
     return BigInt(this.toString());
   }
 
   toNumber(): number {
-    // В number возможна потеря точности, но это ожидаемо для ДЗ.
     return Number(this.toString());
   }
 
@@ -72,17 +69,17 @@ export class BCD8421 extends BCD {
     for (let i = 0; i < this.data.length; i++) {
       const byte = this.data[i];
       // Декодируем байт обратно в две цифры:
-      // highDigit — сдвигаем вправо на 4, чтобы получить старшую тетраду,
-      // lowDigit — маска 0b1111 (15) оставляет только младшие 4 бита.
+      // highDigit - сдвигаем вправо на 4, чтобы получить старшую тетраду,
+      // lowDigit - маска 0b1111 (15) оставляет только младшие 4 бита
       const highDigit = byte >> 4;
       const lowDigit = byte & 0b1111;
 
-      // Возвращаемся к строковому виду десятичных цифр.
+      // Собираем всё вместе
       result += String(highDigit);
       result += String(lowDigit);
     }
 
-    // Убираем ведущий 0, добавленный при нечётной длине.
+    // Убираем ведущий 0, добавленный при нечётной длине
     return result.slice(-this.digitsCount);
   }
 
@@ -111,7 +108,7 @@ export class BCD8421 extends BCD {
 
     // Переводим index (от младшего разряда) в позицию слева направо
     // 1) digitsCount - 1 - index → позиция в реальном числе
-    // 2) + offset → сдвиг в нормализованное (с padding) представление
+    // 2) + offset → сдвиг в нормализованное (с offset) представление
     const position = offset + (this.digitsCount - 1 - index);
 
     // Находим, в каком байте лежит нужная цифра (по 2 цифры на байт)
