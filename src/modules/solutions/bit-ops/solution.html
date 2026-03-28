@@ -4,8 +4,47 @@
     <div id="solution-description">Загрузка описания...</div>
   </details>
 
-  <div class="solution__body">
-    <h2>Циклический сдвиг</h2>
-    <p>Решение пока не добавлено.</p>
+  <header class="solution__header">
+    <div class="solution__title">
+      <h2>Циклический сдвиг</h2>
+      <p>Проверка работы левого и правого сдвига</p>
+    </div>
+  </header>
+
+  <div class="solution__input">
+    <label for="shift-value" class="label">Число (32 бита)</label>
+    <input id="shift-value" type="text" value="0b10000000_00000000_00000000_00000001" />
+    <div class="hint">Можно вводить десятичное или двоичное число с префиксом 0b</div>
+  </div>
+
+  <div class="solution__input">
+    <label for="shift-amount" class="label">Сдвиг</label>
+    <input id="shift-amount" type="number" value="16" />
+  </div>
+
+  <div class="solution__output">
+    <div class="label">Результат</div>
+    <div class="result-grid">
+      <div class="card">
+        <div class="card__title">Исходное (dec)</div>
+        <pre id="original-dec" class="card__content"></pre>
+      </div>
+      <div class="card">
+        <div class="card__title">Left shift (bin)</div>
+        <pre id="left-bin" class="card__content"></pre>
+      </div>
+      <div class="card">
+        <div class="card__title">Left shift (dec)</div>
+        <pre id="left-dec" class="card__content"></pre>
+      </div>
+      <div class="card">
+        <div class="card__title">Right shift (bin)</div>
+        <pre id="right-bin" class="card__content"></pre>
+      </div>
+      <div class="card">
+        <div class="card__title">Right shift (dec)</div>
+        <pre id="right-dec" class="card__content"></pre>
+      </div>
+    </div>
   </div>
 </section>
