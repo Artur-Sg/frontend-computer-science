@@ -6,7 +6,12 @@ export abstract class BCD {
 
   constructor(num: number | bigint) {
     // В этом ДЗ работаем только с неотрицательными значениями.
-    if (num < 0) {
+    if (typeof num === 'number') {
+      // Приводим number к bigint, чтобы дальше работать в одной числовой системе
+      num = BigInt(num);
+    }
+
+    if (num < 0n) {
       throw new Error('Только неотрицательные числа');
     }
     // Пустой буфер — базовая инициализация.
@@ -30,22 +35,47 @@ export class BCD8421 extends BCD {
   constructor(num: number | bigint) {
     super(num);
 
-    // Преобразуем в строку, чтобы работать с десятичными цифрами напрямую
-    const decimal = String(num);
+    const digits: number[] = [];
 
-    this.digitsCount = decimal.length;
+    if (typeof num === 'number') {
+      // Приводим к bigint, чтобы использовать % 10n и / 10n
+      num = BigInt(num);
+    }
+
+    // Извлекаем цифры числа:
+    // num % 10n — последняя цифра
+    // num /= 10n — "сдвигаем" число вправо на один разряд
+    // Цифры получаются в обратном порядке (с конца)
+    do {
+      const digit = num % 10n;
+
+      digits.push(Number(digit));
+      num /= 10n;
+
+    } while (num > 0n);
+
+    // Запоминаем реальное количество цифр
+    this.digitsCount = digits.length;
 
     // Для BCD нужно чётное количество цифр
     // Если длина нечётная — добавляем ведущий 0
     const hasOddLength = this.digitsCount % 2 !== 0;
-    const normalized = hasOddLength ? `0${decimal}` : decimal;
 
-    // В одном байте 2 цифры → длина/2 байта
-    this.data = new Uint8Array(normalized.length / 2);
+    if (hasOddLength) {
+      // Добавляем 0 в конец, потому что далее будет reverse()
+      // После разворота он окажется в начале
+      digits.push(0);
+    }
 
-    for (let i = 0; i < normalized.length; i += 2) {
-      const highDigit = Number(normalized[i]);
-      const lowDigit = Number(normalized[i + 1]);
+    // Переворачиваем, чтобы получить цифры в правильном порядке (слева направо)
+    digits.reverse();
+
+    // В одном байте 2 цифры → длина массива / 2 байта
+    this.data = new Uint8Array(digits.length / 2);
+
+    for (let i = 0; i < digits.length; i += 2) {
+      const highDigit = Number(digits[i]);
+      const lowDigit = Number(digits[i + 1]);
 
       // Упаковка двух цифр в один байт:
       // 1) highDigit << 4 — сдвигаем первую цифру в старшие 4 бита (старшую тетраду).
@@ -56,11 +86,46 @@ export class BCD8421 extends BCD {
   }
 
   toBigint(): bigint {
-    return BigInt(this.toString());
+    let result = 0n;
+
+    for (let i = 0; i < this.data.length; i++) {
+      const byte = this.data[i];
+
+      // Декодируем байт в две цифры (4 бита каждая)
+      const highDigit = byte >> 4;
+      const lowDigit = byte & 0b1111;
+
+      // Собираем число как последовательность 4-битных блоков (BCD):
+      // 1) result << 4n — сдвигаем текущий результат на 4 бита (освобождаем место)
+      // 2) | digit — вставляем следующую цифру в младшие 4 бита
+      result = (result << 4n) | BigInt(highDigit);
+      result = (result << 4n) | BigInt(lowDigit);
+    }
+
+    // Ведущий 0 не влияет на значение, так как добавляет только нулевые старшие биты
+    return result;
   }
 
   toNumber(): number {
-    return Number(this.toString());
+    let result = 0;
+
+    for (let i = 0; i < this.data.length; i++) {
+      const byte = this.data[i];
+
+      // Декодируем байт обратно в две цифры
+      const highDigit = byte >> 4;
+      const lowDigit = byte & 0b1111;
+
+      // Собираем число в десятичной системе:
+      // result * 10 — сдвиг числа на один разряд влево
+      // + digit — добавляем новую цифру
+      result = result * 10 + highDigit;
+      result = result * 10 + lowDigit;
+    }
+
+    // Ведущий 0 (если был) не влияет на результат,
+    // так как 0 * 10 + x = x
+    return result;
   }
 
   toString(): string {
@@ -74,7 +139,7 @@ export class BCD8421 extends BCD {
       const highDigit = byte >> 4;
       const lowDigit = byte & 0b1111;
 
-      // Собираем всё вместе
+      // Собираем строковое представление числа
       result += String(highDigit);
       result += String(lowDigit);
     }
@@ -85,6 +150,8 @@ export class BCD8421 extends BCD {
 
   at(index: number): number {
     if (index < 0) {
+      // Отрицательные индексы считаются с конца:
+      // -1 → последний разряд, -2 → предпоследний
       index = -index - 1;
     }
 

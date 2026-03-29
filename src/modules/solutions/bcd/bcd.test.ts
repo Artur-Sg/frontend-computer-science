@@ -8,7 +8,7 @@ function expectEqual(actual: unknown, expected: unknown, msg: string): void {
 // === Базовый кейс из задания ===
 const n = new BCD8421(65536n);
 
-expectEqual(n.toBigint(), 65536n, 'toBigint() должен вернуть 65536n');
+expectEqual(n.toBigint(), 415030n, 'toBigint() должен вернуть 65536n');
 expectEqual(n.toNumber(), 65536, 'toNumber() должен вернуть 65536');
 expectEqual(n.toString(), '65536', 'toString() должен вернуть "65536"');
 
@@ -54,7 +54,7 @@ assert.throws(() => single.at(-2), RangeError);
 const odd = new BCD8421(12345);
 
 expectEqual(odd.toString(), '12345', 'нечётная длина корректно восстанавливается');
-expectEqual(odd.toBigint(), 12345n, 'нечётная длина toBigint');
+expectEqual(odd.toBigint(), 74565n, 'нечётная длина toBigint');
 expectEqual(odd.toNumber(), 12345, 'нечётная длина toNumber');
 
 expectEqual(odd.at(0), 5, 'odd at(0)');
@@ -87,7 +87,25 @@ expectEqual(even.at(-4), 1, 'even at(-4)');
 const big = new BCD8421(1234567890n);
 
 expectEqual(big.toString(), '1234567890', 'toString() для bigint');
-expectEqual(big.toBigint(), 1234567890n, 'toBigint() для bigint');
+expectEqual(big.toBigint(), 78187493520n, 'toBigint() для bigint');
+
+// === toBigint() должен возвращать бинарную интерпретацию BCD-последовательности ===
+const bcdBigintMeaning = new BCD8421(65536);
+
+expectEqual(
+  bcdBigintMeaning.toBigint(),
+  415030n,
+  'toBigint() должен возвращать бинарную интерпретацию BCD-последовательности',
+);
+
+// === toBigint() на нечётной длине ===
+const oddBigintMeaning = new BCD8421(12345);
+
+expectEqual(
+  oddBigintMeaning.toBigint(),
+  74565n,
+  'toBigint() для 12345 должен учитывать BCD-биты, а не просто возвращать исходное число',
+);
 
 // === Число с нулями внутри ===
 const middleZeros = new BCD8421(9005);
