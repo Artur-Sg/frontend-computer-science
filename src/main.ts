@@ -1,4 +1,5 @@
 import './styles/global.css';
+import 'prismjs/themes/prism-tomorrow.css';
 import '#modules/assignments/entry';
 import { exposeMarkdownRenderer } from '#shared/markdown';
 
