@@ -35,7 +35,7 @@
   /* Code (GitHub Dark-like) */
   --code-bg: #0d1117;
   --code-border: #30363d;
-  --code-text: #c9d1d9;
+  --code-text: #ffffff;
   --code-comment: #8b949e;
   --code-string: #a5d6ff;
   --code-number: #79c0ff;
@@ -432,7 +432,7 @@ details[open] > summary::before {
   padding: 1px 5px;
   border-radius: 5px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .content pre {
@@ -449,6 +449,8 @@ details[open] > summary::before {
   padding: 0;
   background: transparent;
   color: inherit;
+  font-size: 13px;
+  line-height: 1.6;
 }
 
 /* Prism token colors (GitHub Dark-like) */
@@ -465,9 +467,12 @@ details[open] > summary::before {
 
 .content pre code .token.property,
 .content pre code .token.tag,
-.content pre code .token.constant,
 .content pre code .token.symbol,
 .content pre code .token.deleted {
+  color: var(--code-attr);
+}
+
+.content pre code .token.constant {
   color: var(--code-attr);
 }
 
@@ -480,7 +485,6 @@ details[open] > summary::before {
 .content pre code .token.attr-name,
 .content pre code .token.string,
 .content pre code .token.char,
-.content pre code .token.builtin,
 .content pre code .token.inserted {
   color: var(--code-string);
 }
@@ -496,9 +500,20 @@ details[open] > summary::before {
   color: var(--code-keyword);
 }
 
-.content pre code .token.function,
-.content pre code .token.class-name {
+.content pre code .token.function {
   color: var(--code-function);
+}
+
+.content pre code .token.class-name {
+  color: var(--code-class);
+}
+
+.content pre code .token.builtin {
+  color: var(--code-class);
+}
+
+.content pre code .token.class-name .token.constant {
+  color: var(--code-text);
 }
 
 .content pre code .token.regex,
