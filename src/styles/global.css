@@ -32,6 +32,19 @@
   /* Misc */
   --blockquote-bg: #101a2a;
 
+  /* Code (GitHub Dark-like) */
+  --code-bg: #0d1117;
+  --code-border: #30363d;
+  --code-text: #c9d1d9;
+  --code-comment: #8b949e;
+  --code-string: #a5d6ff;
+  --code-number: #79c0ff;
+  --code-keyword: #ff7b72;
+  --code-function: #d2a8ff;
+  --code-class: #ffa657;
+  --code-attr: #7ee787;
+  --code-operator: #c9d1d9;
+
   /* Effects */
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24);
   --shadow-2: 0 10px 28px rgba(0, 0, 0, 0.34);
@@ -413,8 +426,9 @@ details[open] > summary::before {
 }
 
 .content code {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: var(--code-bg);
+  border: 1px solid var(--code-border);
+  color: var(--code-text);
   padding: 1px 5px;
   border-radius: 5px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -422,8 +436,9 @@ details[open] > summary::before {
 }
 
 .content pre {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: var(--code-bg);
+  border: 1px solid var(--code-border);
+  color: var(--code-text);
   padding: 10px;
   border-radius: var(--radius-sm);
   overflow-x: auto;
@@ -433,6 +448,71 @@ details[open] > summary::before {
   border: none;
   padding: 0;
   background: transparent;
+  color: inherit;
+}
+
+/* Prism token colors (GitHub Dark-like) */
+.content pre code .token.comment,
+.content pre code .token.prolog,
+.content pre code .token.doctype,
+.content pre code .token.cdata {
+  color: var(--code-comment);
+}
+
+.content pre code .token.punctuation {
+  color: var(--code-operator);
+}
+
+.content pre code .token.property,
+.content pre code .token.tag,
+.content pre code .token.constant,
+.content pre code .token.symbol,
+.content pre code .token.deleted {
+  color: var(--code-attr);
+}
+
+.content pre code .token.boolean,
+.content pre code .token.number {
+  color: var(--code-number);
+}
+
+.content pre code .token.selector,
+.content pre code .token.attr-name,
+.content pre code .token.string,
+.content pre code .token.char,
+.content pre code .token.builtin,
+.content pre code .token.inserted {
+  color: var(--code-string);
+}
+
+.content pre code .token.operator,
+.content pre code .token.entity,
+.content pre code .token.url {
+  color: var(--code-operator);
+}
+
+.content pre code .token.atrule,
+.content pre code .token.keyword {
+  color: var(--code-keyword);
+}
+
+.content pre code .token.function,
+.content pre code .token.class-name {
+  color: var(--code-function);
+}
+
+.content pre code .token.regex,
+.content pre code .token.important,
+.content pre code .token.variable {
+  color: var(--code-class);
+}
+
+.content pre code .token.bold {
+  font-weight: 700;
+}
+
+.content pre code .token.italic {
+  font-style: italic;
 }
 
 .content blockquote {

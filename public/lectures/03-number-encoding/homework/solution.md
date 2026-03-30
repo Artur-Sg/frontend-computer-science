@@ -58,8 +58,6 @@ const lowDigit = byte & 0b1111;
 ## Код
 
 ```ts
-/* eslint-disable max-classes-per-file */
-
 export abstract class BCD {
   // Храним число как BCD: в одном байте две цифры.
   protected data: Uint8Array;
