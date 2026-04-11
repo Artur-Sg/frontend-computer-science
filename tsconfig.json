@@ -10,11 +10,12 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
+      "#app/*": ["src/app/*"],
       "#modules/*": ["src/modules/*"],
-      "#shared/*": ["src/shared/*"],
+      "#core/*": ["src/core/*"],
       "#ui/*": ["src/ui/*"],
       "#styles/*": ["src/styles/*"],
-      "#assets/*": ["src/assets/*"]
+      "#decorators/*": ["src/decorators/*"]
     },
     "types": ["vite/client", "node"]
   },

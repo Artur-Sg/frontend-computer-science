@@ -1,0 +1,25 @@
+<header>
+  <h1 id="title"></h1>
+</header>
+<slot name="tabs"></slot>
+<div class="panel">
+  <details id="task-details">
+    <summary>Описание задания</summary>
+    <div class="section-body">
+      <slot name="task"></slot>
+    </div>
+  </details>
+
+  <details id="solution-details" open>
+    <summary>Решение</summary>
+    <div class="solution-body section-body">
+      <details class="solution-description">
+        <summary>Описание решения</summary>
+        <div class="section-body">
+          <slot name="solution-description"></slot>
+        </div>
+      </details>
+      <slot name="solution"></slot>
+    </div>
+  </details>
+</div>

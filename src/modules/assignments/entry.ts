@@ -1,2 +1,1 @@
-import '#ui/tab-button';
-import './assignments-app';
+import '#ui/components';

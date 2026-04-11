@@ -1,0 +1,53 @@
+:host {
+  display: inline-flex;
+}
+
+button {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: border-color 0.18s ease, background 0.18s ease,
+    color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+button::before {
+  content: '';
+  display: none;
+  font-size: 11px;
+  line-height: 1;
+  color: var(--success);
+}
+
+:host([icon='play']) button::before {
+  content: '▶';
+  display: inline-block;
+}
+
+:host([icon='check']) button::before {
+  content: '✓';
+  display: inline-block;
+}
+
+button:hover {
+  border-color: var(--border-strong);
+  background: var(--panel-3);
+  box-shadow: var(--shadow-1);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+button:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent-soft-strong);
+}

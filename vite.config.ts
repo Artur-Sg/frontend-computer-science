@@ -1,16 +1,42 @@
+import { resolve } from 'node:path';
+import ts from 'typescript';
 import { defineConfig } from 'vite';
-import path from 'node:path';
+import { vitePluginTypescriptTransform } from 'vite-plugin-typescript-transform';
 
 export default defineConfig({
   base: './',
   publicDir: 'public',
-  resolve: {
-    alias: {
-      '#modules': path.resolve(__dirname, 'src/modules'),
-      '#shared': path.resolve(__dirname, 'src/shared'),
-      '#ui': path.resolve(__dirname, 'src/ui'),
-      '#styles': path.resolve(__dirname, 'src/styles'),
-      '#assets': path.resolve(__dirname, 'src/assets')
+  build: {
+    rollupOptions: {
+      input: {
+        main: resolve(import.meta.dirname, process.env.ENTRY ?? 'index.html')
+      }
     }
-  }
+  },
+  resolve: {
+    tsconfigPaths: true,
+    alias: {
+      '#app': resolve(import.meta.dirname, 'src/app'),
+      '#modules': resolve(import.meta.dirname, 'src/modules'),
+      '#core': resolve(import.meta.dirname, 'src/core'),
+      '#ui': resolve(import.meta.dirname, 'src/ui'),
+      '#styles': resolve(import.meta.dirname, 'src/styles'),
+      '#decorators': resolve(import.meta.dirname, 'src/decorators')
+    }
+  },
+  plugins: [
+    vitePluginTypescriptTransform({
+      enforce: 'pre',
+      filter: {
+        files: {
+          include: /\.ts$/
+        }
+      },
+      tsconfig: {
+        override: {
+          target: ts.ScriptTarget.ES2024
+        }
+      }
+    })
+  ]
 });

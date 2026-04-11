@@ -13,7 +13,7 @@ button {
   transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
 }
 
-button[data-selected="true"] {
+button[data-selected] {
   border-color: var(--accent);
   color: var(--accent);
   background: var(--panel-3);

@@ -50,7 +50,9 @@ module.exports = {
       'error',
       'ignorePackages',
       {
-        ts: 'never'
+        ts: 'never',
+        tsx: 'never',
+        js: 'never'
       }
     ],
     'import/prefer-default-export': 'off'

@@ -1,4 +1,3 @@
-import { renderMarkdown } from '#shared/markdown';
 import templateHtml from './solution.html?raw';
 import { cyclicLeftShift, cyclicRightShift } from './cyclic-shift';
 
@@ -31,7 +30,6 @@ function toDecimal(value: number): string {
 }
 
 export function init(root: HTMLElement): void {
-  const descEl = root.querySelector<HTMLElement>('#solution-description');
   const valueEl = root.querySelector<HTMLInputElement>('#shift-value');
   const amountEl = root.querySelector<HTMLInputElement>('#shift-amount');
   const originalDecEl = root.querySelector<HTMLElement>('#original-dec');
@@ -81,19 +79,6 @@ export function init(root: HTMLElement): void {
     }
     debounceId = window.setTimeout(render, 200);
   };
-
-  fetch('lectures/04-bit-operations/homework/solution.md')
-    .then((res) => res.text())
-    .then((md) => {
-      if (descEl) {
-        descEl.innerHTML = renderMarkdown(md);
-      }
-    })
-    .catch(() => {
-      if (descEl) {
-        descEl.textContent = 'Не удалось загрузить описание решения.';
-      }
-    });
 
   render();
   valueEl?.addEventListener('input', scheduleRender);

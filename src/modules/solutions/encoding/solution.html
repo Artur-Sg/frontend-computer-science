@@ -1,9 +1,4 @@
 <section class="solution">
-  <details class="solution__description">
-    <summary>Описание решения</summary>
-    <div id="solution-description">Загрузка описания...</div>
-  </details>
-
   <header class="solution__header">
     <div class="solution__text">
       <h2>Сравнение схем кодирования</h2>
@@ -27,21 +22,19 @@
     <div class="hint">В режиме декодирования используются только символы 0 и 1.</div>
   </div>
 
-  <div class="result-grid">
-    <div class="card">
-      <div class="card__title">Наивная схема</div>
-      <div class="card__meta" id="naive-meta">Длина: 0 бит</div>
-      <pre class="card__content" id="naive-output"></pre>
-    </div>
+  <div class="result-block">
+    <div class="result-grid">
+      <cs-card id="naive-card" title="Наивная схема" meta="Длина: 0 бит" wrap="soft">
+        <pre id="naive-output"></pre>
+      </cs-card>
 
-    <div class="card">
-      <div class="card__title">Схема с режимами (префиксный код)</div>
-      <div class="card__meta" id="smart-meta">Длина: 0 бит</div>
-      <pre class="card__content" id="smart-output"></pre>
+      <cs-card id="smart-card" title="Схема с режимами (префиксный код)" meta="Длина: 0 бит" wrap="soft">
+        <pre id="smart-output"></pre>
+      </cs-card>
     </div>
   </div>
 
-  <div>
+  <div class="errors-block">
     <div class="label">Ошибки</div>
     <pre id="errors" class="errors"></pre>
   </div>

@@ -1,0 +1,87 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+:host-context(.result-block--equal) {
+  height: 100%;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  background: var(--panel-1);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  box-shadow: var(--shadow-1);
+  transition: border-color 0.18s ease, background 0.18s ease,
+    transform 0.18s ease, box-shadow 0.18s ease;
+  min-width: 0;
+}
+
+:host-context(.result-block--equal) .card {
+  height: 100%;
+}
+
+.card:hover {
+  border-color: var(--border-strong);
+  background: var(--panel-2);
+  box-shadow: var(--shadow-2);
+  transform: translateY(-1px);
+}
+
+.card__title {
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: 4px;
+  letter-spacing: 0.01em;
+}
+
+.card__meta {
+  color: var(--muted);
+  font-size: 12px;
+  display: none;
+}
+
+.card__meta[data-visible='true'] {
+  display: block;
+}
+
+.card__content {
+  margin-top: 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text);
+  min-height: 0;
+  white-space: normal;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.card__slot::slotted(*) {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  white-space: inherit;
+}
+
+.card__slot::slotted(pre) {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 10px !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  min-height: 0 !important;
+  display: block;
+  white-space: pre !important;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+:host([wrap='soft']) .card__slot::slotted(pre) {
+  white-space: pre-wrap !important;
+}

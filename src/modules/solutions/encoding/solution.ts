@@ -1,4 +1,3 @@
-import { renderMarkdown } from '#shared/markdown';
 import templateHtml from './solution.html?raw';
 import { decode as decodeNaive, encode as encodeNaive } from './naive-codec';
 import { decode as decodePrefix, encode as encodePrefix } from './prefix-codec';
@@ -9,22 +8,11 @@ export function init(root: HTMLElement): void {
   const inputEl = root.querySelector<HTMLTextAreaElement>('#input');
   const naiveOutEl = root.querySelector<HTMLElement>('#naive-output');
   const smartOutEl = root.querySelector<HTMLElement>('#smart-output');
-  const naiveMetaEl = root.querySelector<HTMLElement>('#naive-meta');
-  const smartMetaEl = root.querySelector<HTMLElement>('#smart-meta');
+  const naiveCard = root.querySelector<HTMLElement>('#naive-card');
+  const smartCard = root.querySelector<HTMLElement>('#smart-card');
   const errorsEl = root.querySelector<HTMLElement>('#errors');
   const modeEls = Array.from(root.querySelectorAll<HTMLInputElement>('input[name="mode"]'));
-  const descEl = root.querySelector<HTMLElement>('#solution-description');
-
-  if (!inputEl || !naiveOutEl || !smartOutEl || !naiveMetaEl || !smartMetaEl || !errorsEl) {return;}
-
-  fetch('lectures/01-encoding/homework/solution.md')
-    .then((res) => res.text())
-    .then((md) => {
-      if (descEl) {descEl.innerHTML = renderMarkdown(md);}
-    })
-    .catch(() => {
-      if (descEl) {descEl.textContent = 'Не удалось загрузить описание решения.';}
-    });
+  if (!inputEl || !naiveOutEl || !smartOutEl || !errorsEl || !naiveCard || !smartCard) {return;}
 
   function render(): void {
     const mode = modeEls.find((el) => el.checked)?.value || 'encode';
@@ -37,8 +25,8 @@ export function init(root: HTMLElement): void {
 
       naiveOutEl.textContent = naive.output;
       smartOutEl.textContent = smart.output;
-      naiveMetaEl.textContent = `Длина: ${naive.bits.length} бит`;
-      smartMetaEl.textContent = `Длина: ${smart.bits.length} бит`;
+      naiveCard.setAttribute('meta', `Длина: ${naive.bits.length} бит`);
+      smartCard.setAttribute('meta', `Длина: ${smart.bits.length} бит`);
       errors = [...naive.errors, ...smart.errors];
     } else {
       const naive = decodeNaive(text);
@@ -46,8 +34,8 @@ export function init(root: HTMLElement): void {
 
       naiveOutEl.textContent = naive.output;
       smartOutEl.textContent = smart.output;
-      naiveMetaEl.textContent = `Длина: ${naive.bits.length} бит`;
-      smartMetaEl.textContent = `Длина: ${smart.bits.length} бит`;
+      naiveCard.setAttribute('meta', `Длина: ${naive.bits.length} бит`);
+      smartCard.setAttribute('meta', `Длина: ${smart.bits.length} бит`);
       errors = [...naive.errors, ...smart.errors];
     }
 

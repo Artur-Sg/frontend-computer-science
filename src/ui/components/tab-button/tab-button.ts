@@ -1,12 +1,16 @@
 import templateHtml from './tab-button.html?raw';
 import styles from './tab-button.css?raw';
+import { cache } from '#decorators/cache';
 
 const template = document.createElement('template');
 
 template.innerHTML = `<style>${styles}</style>${templateHtml}`;
 
 export class TabButton extends HTMLElement {
-  private button: HTMLButtonElement | null = null;
+  @cache
+  private get button(): HTMLButtonElement | null {
+    return this.shadowRoot?.querySelector('button') ?? null;
+  }
 
   static get observedAttributes(): string[] {
     return ['label', 'selected'];
@@ -17,7 +21,6 @@ export class TabButton extends HTMLElement {
     const root = this.attachShadow({ mode: 'open' });
 
     root.appendChild(template.content.cloneNode(true));
-    this.button = root.querySelector('button');
   }
 
   connectedCallback(): void {
@@ -51,7 +54,7 @@ export class TabButton extends HTMLElement {
     const selected = this.hasAttribute('selected');
 
     this.button.textContent = label;
-    this.button.dataset.selected = selected ? 'true' : 'false';
+    this.button.toggleAttribute('data-selected', selected);
   }
 }
 

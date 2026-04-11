@@ -1,4 +1,3 @@
-import { renderMarkdown } from '#shared/markdown';
 import templateHtml from './solution.html?raw';
 import { instructions, execute } from './execute';
 
@@ -8,18 +7,10 @@ export function init(root: HTMLElement): void {
   const textarea = root.querySelector<HTMLTextAreaElement>('#program');
   const runBtn = root.querySelector<HTMLButtonElement>('#run');
   const output = root.querySelector<HTMLElement>('#output');
-  const descEl = root.querySelector<HTMLElement>('#solution-description');
 
-  if (!textarea || !runBtn || !output) {return;}
-
-  fetch('lectures/02-languages/homework/solution.md')
-    .then((res) => res.text())
-    .then((md) => {
-      if (descEl) {descEl.innerHTML = renderMarkdown(md);}
-    })
-    .catch(() => {
-      if (descEl) {descEl.textContent = 'Не удалось загрузить описание решения.';}
-    });
+  if (!textarea || !runBtn || !output) {
+    return;
+  }
 
   const defaultProgram = `[
     "SET A",

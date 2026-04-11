@@ -1,4 +1,3 @@
-import { renderMarkdown } from '#shared/markdown';
 import templateHtml from './solution.html?raw';
 import { BCD8421 } from './bcd';
 
@@ -50,7 +49,6 @@ function getDigitAt(result: PackedResult, index: number): number {
 }
 
 export function init(root: HTMLElement): void {
-  const descEl = root.querySelector<HTMLElement>('#solution-description');
   const inputEl = root.querySelector<HTMLInputElement>('#bcd-input');
   const normalizedEl = root.querySelector<HTMLElement>('#bcd-normalized');
   const bytesEl = root.querySelector<HTMLElement>('#bcd-bytes');
@@ -92,6 +90,7 @@ export function init(root: HTMLElement): void {
       bytesEl.textContent = '';
       valuesEl.textContent = '';
       lastPacked = null;
+      renderAt();
     }
   };
 
@@ -122,22 +121,10 @@ export function init(root: HTMLElement): void {
     }
   };
 
-  fetch('lectures/03-number-encoding/homework/solution.md')
-    .then((res) => res.text())
-    .then((md) => {
-      if (descEl) {
-        descEl.innerHTML = renderMarkdown(md);
-      }
-    })
-    .catch(() => {
-      if (descEl) {
-        descEl.textContent = 'Не удалось загрузить описание решения.';
-      }
-    });
-
   if (inputEl) {
     renderPacked(inputEl.value);
   }
+  renderAt();
 
   let debounceId: number | null = null;
 
