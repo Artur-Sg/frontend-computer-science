@@ -21,7 +21,11 @@
    - Практика: `lectures/04-bit-operations/practice.md`
    - ДЗ: `lectures/04-bit-operations/homework/homework.md`
    - Решение: `lectures/04-bit-operations/homework/solution.md`
-5. Процессор и память. Адресация памяти и разрядность процессора. Кэш-память.
+5. Лекция 05 — Процессор и память
+   - Теория: `lectures/05-processor-memory/theory.md`
+   - Практика: `lectures/05-processor-memory/practice.md`
+   - ДЗ: `lectures/05-processor-memory/homework/homework.md`
+   - Решение: `lectures/05-processor-memory/homework/solution.md`
 6. Фундаментальные структуры данных. Массив, кортеж и структура. Связный список.
 7. ArrayBuffer и типизированные массивы в JS. Кодирование и декодирование бинарных данных.
 8. Форматы обмена данными. JSON, XML, MessagePack, Protobuf, Avro.

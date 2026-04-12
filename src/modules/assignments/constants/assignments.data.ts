@@ -2,7 +2,7 @@ export type Assignment = {
   id: string;
   title: string;
   taskPath: string;
-  solutionModule: 'encoding' | 'bytecode' | 'bcd' | 'bit-ops';
+  solutionModule: 'encoding' | 'bytecode' | 'bcd' | 'bit-ops' | 'pixel-stream';
 };
 
 export const assignments: Assignment[] = [
@@ -29,5 +29,11 @@ export const assignments: Assignment[] = [
     title: 'ДЗ №4. Циклические сдвиги',
     taskPath: 'lectures/04-bit-operations/homework/homework.md',
     solutionModule: 'bit-ops'
+  },
+  {
+    id: 'hw-05',
+    title: 'ДЗ №5. RGBA PixelStream',
+    taskPath: 'lectures/05-processor-memory/homework/homework.md',
+    solutionModule: 'pixel-stream'
   }
 ];

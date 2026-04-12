@@ -43,6 +43,7 @@ export class AssignmentsPage extends HTMLElement {
       this.layoutEl.append(
         this.tabsEl,
         this.slots.taskEl,
+        this.slots.solutionTldrEl,
         this.slots.solutionDescriptionEl,
         this.slots.solutionEl
       );
@@ -90,6 +91,7 @@ export class AssignmentsPage extends HTMLElement {
     this.setActive(item.id);
     this.router.updateUrl(item.id);
     this.slots.taskEl.textContent = 'Загрузка...';
+    this.slots.solutionTldrEl.textContent = '';
     this.slots.solutionDescriptionEl.textContent = 'Загрузка...';
     this.slots.solutionEl.textContent = 'Загрузка...';
 
@@ -115,6 +117,18 @@ export class AssignmentsPage extends HTMLElement {
     } catch (err) {
       this.slots.solutionDescriptionEl.textContent = 'Не удалось загрузить описание решения.';
       console.error(err);
+    }
+
+    if (item.id === 'hw-05') {
+      this.slots.solutionTldrEl.innerHTML =
+        '<p><strong>TL;DR:</strong> Построчный обход (row-major) быстрее обхода по столбцам ' +
+        '(column-major) на больших данных за счёт лучшей локальности доступа к памяти. ' +
+        'Плотные структуры (TypedArray, FlatArray) показывают наиболее стабильную и высокую ' +
+        'производительность. Случайный доступ является самым дорогим сценарием и сильнее всего ' +
+        'деградирует на структурах с индирекцией (ArrayOfArrays, ArrayOfObjects). JIT ускоряет ' +
+        'выполнение, но не влияет на основные тренды. В данном эксперименте влияние JIT ' +
+        'оказалось значительно ниже, чем влияние локальности доступа к памяти, что указывает ' +
+        'на то, что задача ограничена скоростью работы с памятью.</p>';
     }
 
     try {

@@ -10,7 +10,10 @@
     "lint:fix": "eslint \"src/**/*.ts\" \"vite.config.ts\" --fix",
     "format": "prettier -w .",
     "test:bcd": "tsx src/modules/solutions/bcd/bcd.test.ts",
-    "test:bit-ops": "tsx src/modules/solutions/bit-ops/cyclic-shift.test.ts"
+    "test:bit-ops": "tsx src/modules/solutions/bit-ops/cyclic-shift.test.ts",
+    "test:pixel-stream": "tsx src/modules/solutions/pixel-stream/arrays/pixel-stream.contract.test.ts",
+    "bench:pixel-stream": "tsx src/modules/solutions/pixel-stream/benchmark.ts",
+    "bench:pixel-stream:jitless": "node --jitless ./node_modules/.bin/tsx src/modules/solutions/pixel-stream/benchmark.ts"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",

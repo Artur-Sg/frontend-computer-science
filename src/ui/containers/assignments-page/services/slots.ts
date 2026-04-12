@@ -1,5 +1,6 @@
 type AssignmentSlots = {
   taskEl: HTMLDivElement;
+  solutionTldrEl: HTMLDivElement;
   solutionDescriptionEl: HTMLDivElement;
   solutionEl: HTMLDivElement;
 };
@@ -17,13 +18,18 @@ export function createAssignmentSlots(): AssignmentSlots {
   solutionDescriptionEl.slot = 'solution-description';
   solutionDescriptionEl.textContent = 'Загрузка...';
 
+  const solutionTldrEl = document.createElement('div');
+
+  solutionTldrEl.className = 'content';
+  solutionTldrEl.slot = 'solution-tldr';
+
   const solutionEl = document.createElement('div');
 
   solutionEl.className = 'content';
   solutionEl.slot = 'solution';
   solutionEl.textContent = 'Загрузка...';
 
-  return { taskEl, solutionDescriptionEl, solutionEl };
+  return { taskEl, solutionTldrEl, solutionDescriptionEl, solutionEl };
 }
 
 export type { AssignmentSlots };

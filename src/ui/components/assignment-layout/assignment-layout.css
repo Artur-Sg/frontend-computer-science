@@ -87,6 +87,7 @@ details[open] > summary::before {
 
 ::slotted([slot='task']),
 ::slotted([slot='solution']),
+::slotted([slot='solution-tldr']),
 ::slotted([slot='solution-description']) {
   display: block;
 }

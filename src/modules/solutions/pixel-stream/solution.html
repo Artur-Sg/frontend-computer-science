@@ -1,0 +1,258 @@
+<section class="solution">
+  <header class="solution__header">
+    <div class="solution__title">
+      <h2>Реализации PixelStream</h2>
+    </div>
+  </header>
+
+  <div class="solution__output">
+    <div class="result-block">
+      <details class="solution-code">
+        <summary>TypedArray</summary>
+        <pre><code class="language-ts">import { PixelStream, RGBA, TraverseMode } from './pixel-stream-base.interface';
+
+export class TypedArray implements PixelStream {
+  private RGBA_CHANNELS = 4;
+
+  private data: Uint8Array;
+
+  private width: number;
+
+  private height: number;
+
+  constructor(width: number, height: number) {
+    this.width = width;
+    this.height = height;
+
+    const size = width * height * this.RGBA_CHANNELS;
+
+    this.data = new Uint8Array(size);
+  }
+
+  getPixel(x: number, y: number): RGBA {
+    const index = (x + this.width * y) * this.RGBA_CHANNELS;
+
+    return [this.data[index], this.data[index + 1], this.data[index + 2], this.data[index + 3]];
+  }
+
+  setPixel(x: number, y: number, rgba: RGBA): RGBA {
+    const index = (x + this.width * y) * this.RGBA_CHANNELS;
+    const [r, g, b, a] = rgba;
+
+    this.data[index] = r;
+    this.data[index + 1] = g;
+    this.data[index + 2] = b;
+    this.data[index + 3] = a;
+
+    return rgba;
+  }
+
+  forEach(
+    mode: TraverseMode,
+    callback: (rgba: RGBA, x: number, y: number) => void
+  ): void {
+    if (mode === TraverseMode.RowMajor) {
+      for (let y = 0; y < this.height; y++) {
+        for (let x = 0; x < this.width; x++) {
+          callback(this.getPixel(x, y), x, y);
+        }
+      }
+    } else {
+      for (let x = 0; x < this.width; x++) {
+        for (let y = 0; y < this.height; y++) {
+          callback(this.getPixel(x, y), x, y);
+        }
+      }
+    }
+  }
+}
+</code></pre>
+      </details>
+
+      <details class="solution-code">
+        <summary>FlatArray</summary>
+        <pre><code class="language-ts">import { PixelStream, RGBA, TraverseMode } from './pixel-stream-base.interface';
+
+export class FlatArray implements PixelStream {
+  private RGBA_CHANNELS = 4;
+
+  private data: number[];
+
+  private width: number;
+
+  private height: number;
+
+  constructor(width: number, height: number) {
+    this.width = width;
+    this.height = height;
+
+    const size = width * height * this.RGBA_CHANNELS;
+
+    this.data = new Array(size);
+  }
+
+  getPixel(x: number, y: number): RGBA {
+    const index = (x + this.width * y) * this.RGBA_CHANNELS;
+
+    return [this.data[index], this.data[index + 1], this.data[index + 2], this.data[index + 3]];
+  }
+
+  setPixel(x: number, y: number, rgba: RGBA): RGBA {
+    const index = (x + this.width * y) * this.RGBA_CHANNELS;
+    const [r, g, b, a] = rgba;
+
+    this.data[index] = r;
+    this.data[index + 1] = g;
+    this.data[index + 2] = b;
+    this.data[index + 3] = a;
+
+    return rgba;
+  }
+
+  forEach(mode: TraverseMode, callback: (rgba: RGBA, x: number, y: number) => void): void {
+    if (mode === TraverseMode.RowMajor) {
+      for (let y = 0; y < this.height; y++) {
+        for (let x = 0; x < this.width; x++) {
+          callback(this.getPixel(x, y), x, y);
+        }
+      }
+    } else {
+      for (let x = 0; x < this.width; x++) {
+        for (let y = 0; y < this.height; y++) {
+          callback(this.getPixel(x, y), x, y);
+        }
+      }
+    }
+  }
+}
+</code></pre>
+      </details>
+
+      <details class="solution-code">
+        <summary>ArrayOfArrays</summary>
+        <pre><code class="language-ts">import { PixelStream, RGBA, TraverseMode } from './pixel-stream-base.interface';
+
+export class ArrayOfArrays implements PixelStream {
+  private data: Array&lt;RGBA&gt;;
+
+  private width: number;
+
+  private height: number;
+
+  constructor(width: number, height: number) {
+    this.width = width;
+    this.height = height;
+
+    const size = width * height;
+
+    this.data = new Array(size);
+
+    for (let i = 0; i < size; i++) {
+      this.data[i] = [0, 0, 0, 0];
+    }
+  }
+
+  getPixel(x: number, y: number): RGBA {
+    const index = x + this.width * y;
+
+    return this.data[index];
+  }
+
+  setPixel(x: number, y: number, rgba: RGBA): RGBA {
+    const index = x + this.width * y;
+
+    this.data[index] = rgba;
+
+    return rgba;
+  }
+
+  forEach(mode: TraverseMode, callback: (rgba: RGBA, x: number, y: number) => void): void {
+    if (mode === TraverseMode.RowMajor) {
+      for (let y = 0; y < this.height; y++) {
+        for (let x = 0; x < this.width; x++) {
+          const index = x + this.width * y;
+
+          callback(this.data[index], x, y);
+        }
+      }
+    } else {
+      for (let x = 0; x < this.width; x++) {
+        for (let y = 0; y < this.height; y++) {
+          const index = x + this.width * y;
+
+          callback(this.data[index], x, y);
+        }
+      }
+    }
+  }
+}
+</code></pre>
+      </details>
+
+      <details class="solution-code">
+        <summary>ArrayOfObjects</summary>
+        <pre><code class="language-ts">import { PixelStream, RGBA, RGBAObject, TraverseMode } from './pixel-stream-base.interface';
+
+export class ArrayOfObjects implements PixelStream {
+  private data: Array&lt;RGBAObject&gt;;
+
+  private width: number;
+
+  private height: number;
+
+  constructor(width: number, height: number) {
+    this.width = width;
+    this.height = height;
+
+    const size = width * height;
+
+    this.data = new Array(size);
+
+    for (let i = 0; i < size; i++) {
+      this.data[i] = { red: 0, green: 0, blue: 0, alpha: 0 };
+    }
+  }
+
+  getPixel(x: number, y: number): RGBA {
+    const index = x + this.width * y;
+    const p = this.data[index];
+
+    return [p.red, p.green, p.blue, p.alpha];
+  }
+
+  setPixel(x: number, y: number, rgba: RGBA): RGBA {
+    const index = x + this.width * y;
+    const [red, green, blue, alpha] = rgba;
+
+    this.data[index] = { red, green, blue, alpha };
+
+    return rgba;
+  }
+
+  forEach(mode: TraverseMode, callback: (rgba: RGBA, x: number, y: number) => void): void {
+    if (mode === TraverseMode.RowMajor) {
+      for (let y = 0; y < this.height; y++) {
+        for (let x = 0; x < this.width; x++) {
+          const index = x + this.width * y;
+          const p = this.data[index];
+
+          callback([p.red, p.green, p.blue, p.alpha], x, y);
+        }
+      }
+    } else {
+      for (let x = 0; x < this.width; x++) {
+        for (let y = 0; y < this.height; y++) {
+          const index = x + this.width * y;
+          const p = this.data[index];
+
+          callback([p.red, p.green, p.blue, p.alpha], x, y);
+        }
+      }
+    }
+  }
+}
+</code></pre>
+      </details>
+    </div>
+  </div>
+</section>
