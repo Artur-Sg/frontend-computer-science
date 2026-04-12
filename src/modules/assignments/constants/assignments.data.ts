@@ -2,7 +2,7 @@ export type Assignment = {
   id: string;
   title: string;
   taskPath: string;
-  solutionModule: 'encoding' | 'bytecode' | 'bcd' | 'bit-ops' | 'pixel-stream';
+  solutionModule: 'encoding' | 'bytecode' | 'bcd' | 'bit-ops' | 'pixel-stream' | 'arrays';
 };
 
 export const assignments: Assignment[] = [
@@ -35,5 +35,11 @@ export const assignments: Assignment[] = [
     title: 'ДЗ №5. RGBA PixelStream',
     taskPath: 'lectures/05-processor-memory/homework/homework.md',
     solutionModule: 'pixel-stream'
+  },
+  {
+    id: 'hw-06',
+    title: 'ДЗ №6. Массивы и производительность',
+    taskPath: 'lectures/06-arrays/homework/homework.md',
+    solutionModule: 'arrays'
   }
 ];

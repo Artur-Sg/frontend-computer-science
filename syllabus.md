@@ -26,7 +26,11 @@
    - Практика: `lectures/05-processor-memory/practice.md`
    - ДЗ: `lectures/05-processor-memory/homework/homework.md`
    - Решение: `lectures/05-processor-memory/homework/solution.md`
-6. Фундаментальные структуры данных. Массив, кортеж и структура. Связный список.
+6. Лекция 06 — Фундаментальные структуры данных. Массивы
+   - Теория: `lectures/06-arrays/theory.md`
+   - Практика: `lectures/06-arrays/practice.md`
+   - ДЗ: `lectures/06-arrays/homework/homework.md`
+   - Решение: `lectures/06-arrays/homework/solution.md`
 7. ArrayBuffer и типизированные массивы в JS. Кодирование и декодирование бинарных данных.
 8. Форматы обмена данными. JSON, XML, MessagePack, Protobuf, Avro.
 9. Структуры данных на основе массивов. Матрица и вектор.
