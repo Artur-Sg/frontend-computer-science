@@ -1,9 +1,4 @@
-<section>
-  <h3>Кольцевой буфер</h3>
-  <p>Структура хранит элементы в циклическом массиве и даёт O(1) для <em>push</em>, <em>pop</em>, <em>shift</em>, <em>unshift</em>.</p>
-  <details>
-    <summary>Реализация</summary>
-    <pre><code class="language-ts">export class CircularBuffer&lt;T&gt; {
+export class CircularBuffer<T> {
   private buffer: (T | undefined)[];
 
   private capacity: number;
@@ -25,7 +20,7 @@
   toArray(): T[] {
     const res: T[] = [];
 
-    for (let i = 0; i &lt; this.size; i++) {
+    for (let i = 0; i < this.size; i++) {
       const index = (this.head + i) % this.capacity;
       const value = this.buffer[index];
 
@@ -89,7 +84,7 @@
     const newCapacity = this.capacity * 2;
     const newBuffer: (T | undefined)[] = new Array(newCapacity);
 
-    for (let i = 0; i &lt; this.size; i++) {
+    for (let i = 0; i < this.size; i++) {
       const oldIndex = (this.head + i) % this.capacity;
 
       newBuffer[i] = this.buffer[oldIndex];
@@ -101,6 +96,3 @@
     this.head = 0;
   }
 }
-</code></pre>
-  </details>
-</section>
