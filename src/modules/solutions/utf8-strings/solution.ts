@@ -121,6 +121,10 @@ function initSandbox(root: HTMLElement): void {
 }
 
 function parseInputLines(input: string): string[] {
+  if (input.length === 0) {
+    return [];
+  }
+
   return input.split('\n').map((line) => line.replace(/\r$/, ''));
 }
 
