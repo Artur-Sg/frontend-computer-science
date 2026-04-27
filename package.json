@@ -13,10 +13,14 @@
     "test:bit-ops": "tsx src/modules/solutions/bit-ops/cyclic-shift.test.ts",
     "test:pixel-stream": "tsx src/modules/solutions/pixel-stream/arrays/pixel-stream.contract.test.ts",
     "test:circular-buffer": "tsx src/modules/solutions/arrays/circular-buffer.test.ts",
+    "test:utf8-strings:basic": "tsx src/modules/solutions/utf8-strings/utf8-strings-basic.test.ts",
+    "test:utf8-strings:pointers": "tsx src/modules/solutions/utf8-strings/utf8-strings-pointers.test.ts",
+    "test:utf8-strings": "npm run test:utf8-strings:basic && npm run test:utf8-strings:pointers",
     "bench:pixel-stream": "tsx src/modules/solutions/pixel-stream/benchmark.ts",
     "bench:pixel-stream:jitless": "node --jitless ./node_modules/.bin/tsx src/modules/solutions/pixel-stream/benchmark.ts",
     "bench:arrays": "tsx src/modules/solutions/arrays/benchmark.ts",
-    "bench:circular-buffer": "tsx src/modules/solutions/arrays/circular-buffer-benchmark.ts"
+    "bench:circular-buffer": "tsx src/modules/solutions/arrays/circular-buffer-benchmark.ts",
+    "bench:utf8-strings": "node --expose-gc --import tsx src/modules/solutions/utf8-strings/benchmark.ts"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",

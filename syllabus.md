@@ -31,7 +31,11 @@
    - Практика: `lectures/06-arrays/practice.md`
    - ДЗ: `lectures/06-arrays/homework/homework.md`
    - Решение: `lectures/06-arrays/homework/solution.md`
-7. ArrayBuffer и типизированные массивы в JS. Кодирование и декодирование бинарных данных.
+7. Лекция 07 — ArrayBuffer и типизированные массивы в JS
+   - Теория: `lectures/07-typed-arrays/theory.md`
+   - Практика: `lectures/07-typed-arrays/practice.md`
+   - ДЗ: `lectures/07-typed-arrays/homework/homework.md`
+   - Решение: `lectures/07-typed-arrays/homework/solution.md`
 8. Форматы обмена данными. JSON, XML, MessagePack, Protobuf, Avro.
 9. Структуры данных на основе массивов. Матрица и вектор.
 10. Абстрактные структуры данных. Стек и очередь.

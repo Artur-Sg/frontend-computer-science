@@ -1,0 +1,466 @@
+<section>
+  <style>
+    .utf8-sandbox {
+      margin-top: 20px;
+      padding: 16px;
+      border: 1px solid #2d3b52;
+      border-radius: 16px;
+      background: #182338;
+      color: #e7edf7;
+    }
+
+    .utf8-sandbox h4 {
+      margin: 0 0 10px;
+      font-size: 24px;
+    }
+
+    .utf8-sandbox .muted {
+      margin: 0 0 16px;
+      color: #a9b8cf;
+    }
+
+    .utf8-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 320px 1fr;
+    }
+
+    .utf8-panel {
+      background: #1d2b43;
+      border: 1px solid #2d3b52;
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .utf8-metrics {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(3, minmax(140px, 1fr));
+    }
+
+    .utf8-metric {
+      background: #1d2b43;
+      border: 1px solid #2d3b52;
+      border-radius: 14px;
+      padding: 10px;
+    }
+
+    .utf8-metric-title {
+      color: #9fb0c9;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .utf8-metric-value {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .utf8-layout {
+      margin-top: 12px;
+      background: #1d2b43;
+      border: 1px solid #2d3b52;
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .utf8-layout h5 {
+      margin: 0 0 10px;
+      font-size: 30px;
+    }
+
+    .utf8-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .utf8-chip {
+      border: 1px solid #2f3d56;
+      border-radius: 12px;
+      background: #23324c;
+      padding: 8px 10px;
+      min-width: 84px;
+      line-height: 1.2;
+    }
+
+    .utf8-chip.dark {
+      background: #0d1425;
+      border-color: #0d1425;
+      color: #fff;
+    }
+
+    .utf8-chip-title {
+      font-weight: 700;
+    }
+
+    .utf8-chip-sub {
+      color: #a9b8cf;
+      margin-top: 4px;
+      white-space: nowrap;
+    }
+
+    .utf8-chip.dark .utf8-chip-sub {
+      color: #c7d1e0;
+    }
+
+    .utf8-chip.active {
+      border-color: #4f6ea3;
+      background: #2c4a7a;
+      color: #fff;
+      box-shadow: 0 0 0 1px #4f6ea3 inset;
+    }
+
+    .utf8-chip.active .utf8-chip-sub {
+      color: #d9e6ff;
+    }
+
+    .utf8-note {
+      margin-top: 8px;
+      color: #a9b8cf;
+    }
+
+    .utf8-actions {
+      display: flex;
+      gap: 8px;
+      margin: 10px 0;
+    }
+
+    .utf8-actions button {
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid #4f6ea3;
+      background: #2c4a7a;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .utf8-dumps {
+      margin-top: 12px;
+      display: grid;
+      gap: 8px;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .utf8-dumps pre {
+      margin: 0;
+      max-height: none;
+      overflow: visible;
+      background: #1d2b43;
+      border: 1px solid #2d3b52;
+      border-radius: 12px;
+      padding: 8px;
+      font-size: 12px;
+      color: #e7edf7;
+    }
+
+    .utf8-sandbox label,
+    .utf8-sandbox input,
+    .utf8-sandbox textarea,
+    .utf8-sandbox .utf8-note,
+    .utf8-sandbox .utf8-chip-title,
+    .utf8-sandbox .utf8-metric-title {
+      color: #e7edf7;
+    }
+
+    .utf8-sandbox input,
+    .utf8-sandbox textarea {
+      background: #0f1b2f;
+      border: 1px solid #2f3d56;
+      color: #e7edf7;
+    }
+
+    .utf8-sandbox #utf8-error:empty {
+      display: none;
+    }
+  </style>
+
+  <h3>Реализации</h3>
+
+  <details>
+    <summary>Кодирование массива UTF-8 строк переменной длины</summary>
+    <pre><code class="language-ts">const UINT32_SIZE = 4;
+const LITTLE_ENDIAN = true;
+
+export class Utf8StringsBuffer {
+  constructor(public raw: ArrayBuffer) {}
+
+  get byteLength(): number {
+    return this.raw.byteLength;
+  }
+
+  at(index: number): string | undefined {
+    let offset = 0;
+
+    const decoder = new TextDecoder();
+    const view = new DataView(this.raw);
+    const count = view.getUint32(offset, LITTLE_ENDIAN);
+
+    offset += UINT32_SIZE;
+
+    if (index < 0) {
+      index = count + index;
+    }
+
+    if (index < 0 || index >= count) {
+      return undefined;
+    }
+
+    for (let i = 0; i < count; i++) {
+      const length = view.getUint32(offset, LITTLE_ENDIAN);
+
+      offset += UINT32_SIZE;
+
+      if (i === index) {
+        const encodedString = new Uint8Array(this.raw, offset, length);
+        const decodedString = decoder.decode(encodedString);
+
+        return decodedString;
+      }
+
+      offset += length;
+    }
+
+    return undefined;
+  }
+}
+
+export function encodeStrings(strings: string[]): Utf8StringsBuffer {
+  const encoder = new TextEncoder();
+  const encodedStrings = strings.map((str) => encoder.encode(str));
+
+  let totalBytes = UINT32_SIZE + UINT32_SIZE * encodedStrings.length;
+
+  for (const encoded of encodedStrings) {
+    totalBytes += encoded.byteLength;
+  }
+
+  const raw = new ArrayBuffer(totalBytes);
+  const bytes = new Uint8Array(raw);
+  const view = new DataView(raw);
+
+  let offset = 0;
+
+  view.setUint32(offset, strings.length, LITTLE_ENDIAN);
+  offset += UINT32_SIZE;
+
+  for (const encoded of encodedStrings) {
+    view.setUint32(offset, encoded.byteLength, LITTLE_ENDIAN);
+    offset += UINT32_SIZE;
+
+    bytes.set(encoded, offset);
+    offset += encoded.byteLength;
+  }
+
+  return new Utf8StringsBuffer(raw);
+}
+
+export function decodeStrings(buffer: Utf8StringsBuffer): string[] {
+  let offset = 0;
+
+  const rawData = buffer.raw;
+  const view = new DataView(rawData);
+  const decoder = new TextDecoder();
+  const count = view.getUint32(offset, LITTLE_ENDIAN);
+  const res: string[] = [];
+
+  offset += UINT32_SIZE;
+
+  for (let i = 0; i < count; i++) {
+    const encodedStringLength = view.getUint32(offset, LITTLE_ENDIAN);
+
+    offset += UINT32_SIZE;
+
+    const encodedString = new Uint8Array(rawData, offset, encodedStringLength);
+    const decodedString = decoder.decode(encodedString);
+
+    res.push(decodedString);
+    offset += encodedStringLength;
+  }
+
+  return res;
+}
+</code></pre>
+  </details>
+
+  <details>
+    <summary>То же, но с помощью указателя</summary>
+    <pre><code class="language-ts">const UINT32_SIZE = 4;
+const POINTER_ENTRY_SIZE = UINT32_SIZE * 2;
+const LITTLE_ENDIAN = true;
+
+export class Utf8StringsPointersBuffer {
+  constructor(public raw: ArrayBuffer) {}
+
+  get byteLength(): number {
+    return this.raw.byteLength;
+  }
+
+  at(index: number): string | undefined {
+    const decoder = new TextDecoder();
+    const view = new DataView(this.raw);
+
+    const count = view.getUint32(0, LITTLE_ENDIAN);
+
+    if (index < 0) {
+      index = count + index;
+    }
+
+    if (index < 0 || index >= count) {
+      return undefined;
+    }
+
+    const entryOffset = UINT32_SIZE + index * POINTER_ENTRY_SIZE;
+    const length = view.getUint32(entryOffset, LITTLE_ENDIAN);
+    const pointer = view.getUint32(entryOffset + UINT32_SIZE, LITTLE_ENDIAN);
+
+    const encodedString = new Uint8Array(this.raw, pointer, length);
+    const decodedString = decoder.decode(encodedString);
+
+    return decodedString;
+  }
+
+  set(index: number, value: string): void {
+    const view = new DataView(this.raw);
+
+    const count = view.getUint32(0, LITTLE_ENDIAN);
+
+    if (index < 0) {
+      index = count + index;
+    }
+
+    if (index < 0 || index >= count) {
+      return;
+    }
+
+    const decoded = decodeStrings(this);
+
+    decoded[index] = value;
+
+    const newBuffer = encodeStrings(decoded);
+
+    this.raw = newBuffer.raw;
+  }
+}
+
+export function encodeStrings(strings: string[]): Utf8StringsPointersBuffer {
+  const encoder = new TextEncoder();
+  const encodedStrings = strings.map((str) => encoder.encode(str));
+  const count = encodedStrings.length;
+
+  let totalBytes = UINT32_SIZE + POINTER_ENTRY_SIZE * encodedStrings.length;
+
+  for (const encoded of encodedStrings) {
+    totalBytes += encoded.byteLength;
+  }
+
+  const raw = new ArrayBuffer(totalBytes);
+  const bytes = new Uint8Array(raw);
+  const view = new DataView(raw);
+
+  view.setUint32(0, strings.length, LITTLE_ENDIAN);
+
+  let tableOffset = UINT32_SIZE;
+  let dataOffset = UINT32_SIZE + POINTER_ENTRY_SIZE * count;
+
+  for (const encoded of encodedStrings) {
+    const pointer = dataOffset;
+
+    view.setUint32(tableOffset, encoded.byteLength, LITTLE_ENDIAN);
+    view.setUint32(tableOffset + UINT32_SIZE, pointer, LITTLE_ENDIAN);
+
+    bytes.set(encoded, dataOffset);
+
+    tableOffset += POINTER_ENTRY_SIZE;
+    dataOffset += encoded.byteLength;
+  }
+
+  return new Utf8StringsPointersBuffer(raw);
+}
+
+export function decodeStrings(buffer: Utf8StringsPointersBuffer): string[] {
+  const rawData = buffer.raw;
+  const view = new DataView(rawData);
+  const count = view.getUint32(0, LITTLE_ENDIAN);
+  const res: string[] = [];
+
+  for (let i = 0; i < count; i++) {
+    const decodedString = buffer.at(i);
+
+    if (decodedString !== undefined) {
+      res.push(decodedString);
+    }
+  }
+
+  return res;
+}
+</code></pre>
+  </details>
+
+  <div class="utf8-sandbox">
+    <h4>Демонстрация двух бинарных форматов: basic и pointers</h4>
+    <p class="muted">Задайте строки и индекс, чтобы сравнить структуру буфера, поведение <code>at(index)</code> и расход памяти.</p>
+
+    <div class="utf8-grid">
+      <div class="utf8-panel">
+        <label for="utf8-input">Строки, по одной на строку</label>
+        <textarea id="utf8-input" rows="7">hello
+мир
+
+🙂
+кириллица</textarea>
+
+        <label for="utf8-index">Индекс для at(index)</label>
+        <input id="utf8-index" type="number" value="0" />
+
+        <div id="utf8-error" class="errors"></div>
+
+        <label for="utf8-set-value">set(index, value)</label>
+        <input id="utf8-set-value" type="text" value="Привет," />
+
+        <div class="utf8-actions">
+          <button id="utf8-run" type="button">Пересчитать</button>
+          <button id="utf8-apply-set" type="button">Применить set</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="utf8-metrics">
+          <div class="utf8-metric">
+            <div class="utf8-metric-title">Байт в basic</div>
+            <div id="utf8-metric-basic" class="utf8-metric-value">-</div>
+          </div>
+          <div class="utf8-metric">
+            <div class="utf8-metric-title">Байт в pointers</div>
+            <div id="utf8-metric-pointers" class="utf8-metric-value">-</div>
+          </div>
+          <div class="utf8-metric">
+            <div class="utf8-metric-title">Отношение памяти</div>
+            <div id="utf8-metric-ratio" class="utf8-metric-value">-</div>
+          </div>
+        </div>
+
+        <div class="utf8-layout">
+          <h5>Схема basic</h5>
+          <div id="utf8-layout-basic" class="utf8-chip-row"></div>
+          <div id="utf8-layout-basic-note" class="utf8-note"></div>
+        </div>
+
+        <div class="utf8-layout">
+          <h5>Схема pointers</h5>
+          <div id="utf8-layout-pointers-meta" class="utf8-chip-row"></div>
+          <div id="utf8-layout-pointers-data" class="utf8-chip-row"></div>
+          <div id="utf8-layout-pointers-note" class="utf8-note"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="utf8-dumps">
+      <pre id="utf8-bytes-basic"></pre>
+      <pre id="utf8-bytes-pointers"></pre>
+      <pre id="utf8-binary-basic"></pre>
+      <pre id="utf8-binary-pointers"></pre>
+    </div>
+  </div>
+</section>

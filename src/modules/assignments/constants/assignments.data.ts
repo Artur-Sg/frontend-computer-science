@@ -2,7 +2,14 @@ export type Assignment = {
   id: string;
   title: string;
   taskPath: string;
-  solutionModule: 'encoding' | 'bytecode' | 'bcd' | 'bit-ops' | 'pixel-stream' | 'arrays';
+  solutionModule:
+    | 'encoding'
+    | 'bytecode'
+    | 'bcd'
+    | 'bit-ops'
+    | 'pixel-stream'
+    | 'arrays'
+    | 'utf8-strings';
 };
 
 export const assignments: Assignment[] = [
@@ -41,5 +48,11 @@ export const assignments: Assignment[] = [
     title: 'ДЗ №6. Массивы и производительность',
     taskPath: 'lectures/06-arrays/homework/homework.md',
     solutionModule: 'arrays'
+  },
+  {
+    id: 'hw-07',
+    title: 'ДЗ №7. UTF-8 сериализация строк',
+    taskPath: 'lectures/07-typed-arrays/homework/homework.md',
+    solutionModule: 'utf8-strings'
   }
 ];
