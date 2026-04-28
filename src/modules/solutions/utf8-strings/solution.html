@@ -1,5 +1,9 @@
 <section>
   <style>
+    .utf8-solution-accordion + .utf8-solution-accordion {
+      margin-top: 10px;
+    }
+
     .utf8-sandbox {
       margin-top: 20px;
       padding: 16px;
@@ -178,7 +182,7 @@
 
   <h3>Реализации</h3>
 
-  <details>
+  <details class="utf8-solution-accordion">
     <summary>Кодирование массива UTF-8 строк переменной длины</summary>
     <pre><code class="language-ts">const UINT32_SIZE = 4;
 const LITTLE_ENDIAN = true;
@@ -284,7 +288,7 @@ export function decodeStrings(buffer: Utf8StringsBuffer): string[] {
 </code></pre>
   </details>
 
-  <details>
+  <details class="utf8-solution-accordion">
     <summary>То же, но с помощью указателя</summary>
     <pre><code class="language-ts">const UINT32_SIZE = 4;
 const POINTER_ENTRY_SIZE = UINT32_SIZE * 2;
