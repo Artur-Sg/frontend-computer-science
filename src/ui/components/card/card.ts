@@ -49,10 +49,14 @@ export class Card extends HTMLElement {
     }
 
     const wrap = this.getAttribute('wrap');
+    const shouldSoftWrap = wrap === 'soft';
+    const hasSoftWrap = this.hasAttribute('wrap');
 
-    if (wrap === 'soft') {
+    // Важно: не дёргать set/remove без необходимости, иначе ловим
+    // рекурсию attributeChangedCallback -> sync -> set/remove -> ...
+    if (shouldSoftWrap && (!hasSoftWrap || wrap !== 'soft')) {
       this.setAttribute('wrap', 'soft');
-    } else {
+    } else if (!shouldSoftWrap && hasSoftWrap) {
       this.removeAttribute('wrap');
     }
   }

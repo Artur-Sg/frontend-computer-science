@@ -29,6 +29,66 @@
       margin-bottom: 12px;
     }
 
+    .df-demo button:disabled {
+      opacity: 0.8;
+      cursor: wait;
+    }
+
+    .df-controls {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: repeat(3, minmax(220px, 1fr));
+      margin-bottom: 8px;
+    }
+
+    .df-controls label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 13px;
+      color: #cbd7ea;
+    }
+
+    .df-controls input[type='file'] {
+      background: #0f1b2f;
+      border: 1px solid #2f3d56;
+      border-radius: 8px;
+      color: #dce8fa;
+      padding: 6px;
+    }
+
+    .df-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .df-actions button {
+      margin-bottom: 0;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .df-flag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #cbd7ea;
+      font-size: 13px;
+      margin-left: 2px;
+      white-space: nowrap;
+      line-height: 1;
+      height: 36px;
+    }
+
+    .df-flag input {
+      margin: 0;
+      transform: translateY(1px);
+    }
+
     .df-cols {
       display: grid;
       gap: 10px;
@@ -105,6 +165,13 @@
       background: #23324c;
       color: #dce8fa;
     }
+
+    .df-inline-status {
+      display: inline-block;
+      margin-left: 10px;
+      font-size: 13px;
+      color: #c8d7ee;
+    }
   </style>
 
   <details>
@@ -167,8 +234,31 @@ export function parseCSV(
 
   <div class="df-demo" id="df-demo">
     <h4>Демонстрация: Streaming vs Full Parse</h4>
-    <p class="muted">Сравнение поведения CSV stream, JSON.parse и MessagePack stream на наборе 200k записей.</p>
-    <button id="df-run-btn" type="button">Run comparison</button>
+    <p class="muted">Сравнение поведения CSV stream, JSON.parse и MessagePack stream в браузере (демо-аналог, не Node CLI benchmark).
+      <br> Числа могут заметно отличаться от Node-бенчмарка: здесь всё выполняется в одном UI-потоке браузера, с другим движком/профилем памяти и без реального файлового streaming из Node.</p>
+    <div class="df-controls">
+      <label>
+        CSV файл (опционально)
+        <input id="df-file-csv" type="file" accept=".csv,text/csv" />
+      </label>
+      <label>
+        JSON файл (опционально)
+        <input id="df-file-json" type="file" accept=".json,application/json" />
+      </label>
+      <label>
+        MessagePack файл (опционально)
+        <input id="df-file-msgpack" type="file" accept=".msgpack,application/octet-stream" />
+      </label>
+    </div>
+    <div class="df-actions">
+      <button id="df-run-btn" type="button">Run comparison</button>
+      <button id="df-use-default-btn" type="button">Использовать демо-данные</button>
+      <label class="df-flag">
+        <input id="df-use-brotli" type="checkbox" />
+        Brotli (медленнее)
+      </label>
+      <span id="df-calc-indicator" class="df-inline-status" style="display: none;">Считаю метрики...</span>
+    </div>
 
     <div class="df-cols">
       <article class="df-card" data-kind="csv">
