@@ -9,7 +9,8 @@ export type Assignment = {
     | 'bit-ops'
     | 'pixel-stream'
     | 'arrays'
-    | 'utf8-strings';
+    | 'utf8-strings'
+    | 'data-formats';
 };
 
 export const assignments: Assignment[] = [
@@ -54,5 +55,11 @@ export const assignments: Assignment[] = [
     title: 'ДЗ №7. UTF-8 сериализация строк',
     taskPath: 'lectures/07-typed-arrays/homework/homework.md',
     solutionModule: 'utf8-strings'
+  },
+  {
+    id: 'hw-08',
+    title: 'ДЗ №8. Форматы обмена данными',
+    taskPath: 'lectures/08-data-formats/homework/homework.md',
+    solutionModule: 'data-formats'
   }
 ];

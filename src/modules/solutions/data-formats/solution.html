@@ -1,0 +1,245 @@
+<section>
+  <style>
+    .df-demo {
+      margin-top: 18px;
+      padding: 14px;
+      border: 1px solid #2d3b52;
+      border-radius: 14px;
+      background: #182338;
+      color: #e7edf7;
+    }
+
+    .df-demo h4 {
+      margin: 0 0 8px;
+      font-size: 22px;
+    }
+
+    .df-demo .muted {
+      margin: 0 0 12px;
+      color: #a9b8cf;
+    }
+
+    .df-demo button {
+      border: 1px solid #4f6ea3;
+      border-radius: 10px;
+      background: #2c4a7a;
+      color: #fff;
+      padding: 8px 12px;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+
+    .df-cols {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(3, minmax(220px, 1fr));
+    }
+
+    .df-card {
+      border: 1px solid #2d3b52;
+      border-radius: 12px;
+      background: #1d2b43;
+      padding: 10px;
+    }
+
+    .df-card h5 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .df-kv {
+      font-size: 13px;
+      color: #cbd7ea;
+      line-height: 1.45;
+      margin-bottom: 8px;
+      min-height: 92px;
+    }
+
+    .df-progress {
+      width: 100%;
+      height: 8px;
+      background: #0f1b2f;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 8px 0;
+    }
+
+    .df-progress > div {
+      height: 100%;
+      width: 0%;
+      background: #69b7ff;
+      transition: width 120ms linear;
+    }
+
+    .df-log {
+      background: #0f1b2f;
+      border: 1px solid #2f3d56;
+      border-radius: 8px;
+      padding: 8px;
+      font-size: 12px;
+      height: 144px;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+
+    .df-table-wrap {
+      margin-top: 12px;
+      overflow-x: auto;
+      min-height: 210px;
+    }
+
+    .df-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .df-table th,
+    .df-table td {
+      border: 1px solid #2d3b52;
+      padding: 6px 8px;
+      text-align: left;
+    }
+
+    .df-table th {
+      background: #23324c;
+      color: #dce8fa;
+    }
+  </style>
+
+  <details>
+    <summary>CSV-парсер с поддержкой кавычек и экранирования (regex-вариант)</summary>
+    <pre><code class="language-ts">import * as fs from 'node:fs';
+import * as readline from 'node:readline';
+
+export type CsvRow = string[];
+
+
+/**
+  * Важно по результатам бенчмарка:
+  * regex-вариант универсальнее, но заметно медленнее.
+  * Упрощённый вариант:
+  * return line.split(separator)
+  * на текущем наборе данных работает сильно быстрее.
+*/
+export function splitCsvLine(line: string, separator = ','): CsvRow {
+  // Экранируем спецсимволы RegExp в разделителе (например |, ., ?, +),
+  // чтобы использовать separator как буквальный символ в шаблоне.
+  const sep = separator.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  return line
+    // 1) Делим только по НЕэкранированному разделителю:
+    //    (?&lt;!\\)${sep}
+    // 2) И только если разделитель вне quoted-поля:
+    //    (?=(?:[^"]*"[^"]*")*[^"]*$)
+    .split(new RegExp(`(?&lt;!\\\\)${sep}(?=(?:[^"]*"[^"]*")*[^"]*$)`))
+    .map((field) =>
+      field
+        // Снять внешние кавычки: "abc" -> abc
+        .replace(/^"(.*)"$/, '$1')
+        // Двойные кавычки внутри quoted-поля: "" -> "
+        .replace(/""/g, '"')
+        // Вернуть экранированный разделитель: \, -> ,
+        .replace(new RegExp(`\\\\${sep}`, 'g'), separator)
+    );
+}
+
+export function parseCSV(
+  file: string,
+  separator = ',',
+  cb: (err: Error | null, data: CsvRow[]) => void
+): void {
+  const rows: CsvRow[] = [];
+  const rl = readline.createInterface({
+    input: fs.createReadStream(file),
+    crlfDelay: Infinity
+  });
+
+  rl.on('line', (line) => {
+    rows.push(splitCsvLine(line, separator));
+  });
+
+  rl.once('close', () => cb(null, rows));
+  rl.once('error', (err) => cb(err, []));
+}
+</code></pre>
+  </details>
+
+  <div class="df-demo" id="df-demo">
+    <h4>Демонстрация: Streaming vs Full Parse</h4>
+    <p class="muted">Сравнение поведения CSV stream, JSON.parse и MessagePack stream на наборе 200k записей.</p>
+    <button id="df-run-btn" type="button">Run comparison</button>
+
+    <div class="df-cols">
+      <article class="df-card" data-kind="csv">
+        <h5>CSV Stream</h5>
+        <div class="df-kv" id="df-meta-csv"></div>
+        <div class="df-progress"><div id="df-progress-csv"></div></div>
+        <div class="df-log" id="df-log-csv"></div>
+      </article>
+
+      <article class="df-card" data-kind="json">
+        <h5>JSON.parse</h5>
+        <div class="df-kv" id="df-meta-json"></div>
+        <div class="df-progress"><div id="df-progress-json"></div></div>
+        <div class="df-log" id="df-log-json"></div>
+      </article>
+
+      <article class="df-card" data-kind="msgpack">
+        <h5>MessagePack Stream</h5>
+        <div class="df-kv" id="df-meta-msgpack"></div>
+        <div class="df-progress"><div id="df-progress-msgpack"></div></div>
+        <div class="df-log" id="df-log-msgpack"></div>
+      </article>
+    </div>
+
+    <div class="df-table-wrap">
+      <table class="df-table" id="df-results-table">
+        <thead>
+          <tr>
+            <th>Формат</th>
+            <th>Total (ms)</th>
+            <th>First record (ms)</th>
+            <th>Peak heap (MB)</th>
+            <th>Raw (MB)</th>
+            <th>Gzip (MB)</th>
+            <th>Brotli (MB)</th>
+            <th>Zip (MB)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>CSV stream</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>JSON.parse</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>MessagePack stream</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

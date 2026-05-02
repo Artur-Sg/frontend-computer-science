@@ -1,0 +1,6 @@
+id,name,city,note
+1,Alice,London,plain
+2,Bob,"Los,Angeles",quoted comma
+3,Carol,New\,York,escaped comma
+4,Dan,"He said ""hi""",double quote
+5,,,empty fields

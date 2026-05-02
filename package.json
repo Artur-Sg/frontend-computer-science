@@ -16,11 +16,13 @@
     "test:utf8-strings:basic": "tsx src/modules/solutions/utf8-strings/utf8-strings-basic.test.ts",
     "test:utf8-strings:pointers": "tsx src/modules/solutions/utf8-strings/utf8-strings-pointers.test.ts",
     "test:utf8-strings": "npm run test:utf8-strings:basic && npm run test:utf8-strings:pointers",
+    "test:data-formats": "tsx src/modules/solutions/data-formats/csv-parser.test.ts",
     "bench:pixel-stream": "tsx src/modules/solutions/pixel-stream/benchmark.ts",
     "bench:pixel-stream:jitless": "node --jitless ./node_modules/.bin/tsx src/modules/solutions/pixel-stream/benchmark.ts",
     "bench:arrays": "tsx src/modules/solutions/arrays/benchmark.ts",
     "bench:circular-buffer": "tsx src/modules/solutions/arrays/circular-buffer-benchmark.ts",
-    "bench:utf8-strings": "node --expose-gc --import tsx src/modules/solutions/utf8-strings/benchmark.ts"
+    "bench:utf8-strings": "node --expose-gc --import tsx src/modules/solutions/utf8-strings/benchmark.ts",
+    "bench:data-formats": "node --expose-gc --import tsx src/modules/solutions/data-formats/benchmark.ts"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
@@ -40,7 +42,9 @@
     "vite-tsconfig-paths": "^6.1.1"
   },
   "dependencies": {
+    "archiver": "^7.0.1",
     "marked": "^12.0.2",
+    "msgpackr": "^1.11.10",
     "prismjs": "^1.30.0"
   }
 }

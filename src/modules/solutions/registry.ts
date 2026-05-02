@@ -10,7 +10,8 @@ export type SolutionKey =
   | 'bit-ops'
   | 'pixel-stream'
   | 'arrays'
-  | 'utf8-strings';
+  | 'utf8-strings'
+  | 'data-formats';
 
 export const solutionLoaders: Record<SolutionKey, () => Promise<SolutionModule>> = {
   encoding: () => import('./encoding/solution'),
@@ -19,5 +20,6 @@ export const solutionLoaders: Record<SolutionKey, () => Promise<SolutionModule>>
   'bit-ops': () => import('./bit-ops/solution'),
   'pixel-stream': () => import('./pixel-stream/solution'),
   arrays: () => import('./arrays/solution'),
-  'utf8-strings': () => import('./utf8-strings/solution')
+  'utf8-strings': () => import('./utf8-strings/solution'),
+  'data-formats': () => import('./data-formats/solution')
 };

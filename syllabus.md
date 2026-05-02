@@ -36,7 +36,11 @@
    - Практика: `lectures/07-typed-arrays/practice.md`
    - ДЗ: `lectures/07-typed-arrays/homework/homework.md`
    - Решение: `lectures/07-typed-arrays/homework/solution.md`
-8. Форматы обмена данными. JSON, XML, MessagePack, Protobuf, Avro.
+8. Лекция 08 — Форматы обмена данными
+   - Теория: `lectures/08-data-formats/theory.md`
+   - Практика: `lectures/08-data-formats/practice.md`
+   - ДЗ: `lectures/08-data-formats/homework/homework.md`
+   - Решение: `lectures/08-data-formats/homework/solution.md`
 9. Структуры данных на основе массивов. Матрица и вектор.
 10. Абстрактные структуры данных. Стек и очередь.
 11. Сегменты памяти программы. Стек и куча.
