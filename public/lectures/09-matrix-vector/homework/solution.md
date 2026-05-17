@@ -216,12 +216,7 @@ export class Vector<TValue, TInput = TValue, TAccess = TValue> {
 </details>
 
 ## Бенчмарк Matrix2D
-
-Команда запуска:
-
-```bash
-npm run bench:matrix
-```
+Результаты бенчмарка `Matrix2D binary vs JSON flat vs JSON nested`.
 
 ### Результаты
 
@@ -252,12 +247,7 @@ npm run bench:matrix
 Важная оговорка: в текущем варианте binary хранит только сырые RGBA-байты. `rows/cols` и тип элемента считаются внешними метаданными.
 
 ## Бенчмарк Vector
-
-Команда запуска:
-
-```bash
-npm run bench:vector
-```
+Результаты бенчмарка `Vector<RGBAView> vs Array<RGBAObject>`.
 
 ### Результаты
 
