@@ -168,7 +168,7 @@ export class AssignmentsPage extends HTMLElement {
         '<li>Для <code>1024x1024</code>: <code>binary = 4.00 MB</code>, <code>JSON flat = 14.71 MB</code>, <code>JSON nested = 16.71 MB</code>.</li>' +
         '<li>Даже после <code>gzip</code> бинарный формат меньше: <code>0.89 MB</code> против <code>1.22–1.28 MB</code>.</li>' +
         '<li><code>Vector&lt;RGBAView&gt;</code> быстрее <code>Array&lt;RGBAObject&gt;</code>: примерно <code>1.49x</code> в базовом и <code>3.07x</code> в стресс-сценарии.</li>' +
-        '<li>По памяти <code>Vector</code> нагружает <code>arrayBuffers</code>, а массив объектов — в первую очередь <code>heapUsed</code>.</li>' +
+        '<li>По памяти <code>Vector</code> хранит основную часть данных в <code>ArrayBuffer</code>, а массив объектов — как множество JS-объектов в куче (<code>heapUsed</code>), поэтому массив объектов создаёт больше работы для GC.</li>' +
         '</ul>';
     }
 
