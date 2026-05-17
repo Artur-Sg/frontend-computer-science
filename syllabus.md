@@ -41,7 +41,11 @@
    - Практика: `lectures/08-data-formats/practice.md`
    - ДЗ: `lectures/08-data-formats/homework/homework.md`
    - Решение: `lectures/08-data-formats/homework/solution.md`
-9. Структуры данных на основе массивов. Матрица и вектор.
+9. Лекция 09 — Структуры данных на основе массивов. Матрица и вектор.
+   - Теория: `lectures/09-matrix-vector/theory.md`
+   - Практика: `lectures/09-matrix-vector/practice.md`
+   - ДЗ: `lectures/09-matrix-vector/homework/homework.md`
+   - Решение: `lectures/09-matrix-vector/homework/solution.md`
 10. Абстрактные структуры данных. Стек и очередь.
 11. Сегменты памяти программы. Стек и куча.
 12. Многозадачность и роль ОС. Ручное и автоматическое управление памятью.

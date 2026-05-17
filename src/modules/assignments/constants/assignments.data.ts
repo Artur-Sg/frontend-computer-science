@@ -10,7 +10,8 @@ export type Assignment = {
     | 'pixel-stream'
     | 'arrays'
     | 'utf8-strings'
-    | 'data-formats';
+    | 'data-formats'
+    | 'matrix-vector';
 };
 
 export const assignments: Assignment[] = [
@@ -61,5 +62,11 @@ export const assignments: Assignment[] = [
     title: 'ДЗ №8. Форматы обмена данными',
     taskPath: 'lectures/08-data-formats/homework/homework.md',
     solutionModule: 'data-formats'
+  },
+  {
+    id: 'hw-09',
+    title: 'ДЗ №9. Матрица и вектор',
+    taskPath: 'lectures/09-matrix-vector/homework/homework.md',
+    solutionModule: 'matrix-vector'
   }
 ];

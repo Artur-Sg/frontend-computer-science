@@ -17,12 +17,19 @@
     "test:utf8-strings:pointers": "tsx src/modules/solutions/utf8-strings/utf8-strings-pointers.test.ts",
     "test:utf8-strings": "npm run test:utf8-strings:basic && npm run test:utf8-strings:pointers",
     "test:data-formats": "tsx src/modules/solutions/data-formats/csv-parser.test.ts",
+    "test:matrix2d": "tsx src/modules/solutions/matrix-vector/matrix2d.test.ts",
+    "test:vector": "tsx src/modules/solutions/matrix-vector/vector.test.ts",
+    "test:rgba-view": "tsx src/modules/solutions/matrix-vector/rgba-view.test.ts",
+    "test:matrix-vector": "npm run test:matrix2d && npm run test:vector && npm run test:rgba-view",
     "bench:pixel-stream": "tsx src/modules/solutions/pixel-stream/benchmark.ts",
     "bench:pixel-stream:jitless": "node --jitless ./node_modules/.bin/tsx src/modules/solutions/pixel-stream/benchmark.ts",
     "bench:arrays": "tsx src/modules/solutions/arrays/benchmark.ts",
     "bench:circular-buffer": "tsx src/modules/solutions/arrays/circular-buffer-benchmark.ts",
     "bench:utf8-strings": "node --expose-gc --import tsx src/modules/solutions/utf8-strings/benchmark.ts",
-    "bench:data-formats": "node --expose-gc --import tsx src/modules/solutions/data-formats/benchmark.ts"
+    "bench:data-formats": "node --expose-gc --import tsx src/modules/solutions/data-formats/benchmark.ts",
+    "bench:matrix": "tsx src/modules/solutions/matrix-vector/matrix-benchmark.ts",
+    "bench:matrix-vector": "npm run bench:matrix",
+    "bench:vector": "node --expose-gc --import tsx src/modules/solutions/matrix-vector/vector-benchmark.ts"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",

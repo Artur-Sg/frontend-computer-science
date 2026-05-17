@@ -160,6 +160,16 @@ export class AssignmentsPage extends HTMLElement {
         '<li>Результат CSV сильно зависит от реализации парсера: regex-вариант заметно медленнее, чем простой <code>split</code> на этом наборе данных.</li>' +
         '<li>Выбор формата делается по метрикам: общее время, latency до первой записи, пик памяти, размер raw/gzip.</li>' +
         '</ul>';
+    } else if (item.id === 'hw-09') {
+      this.slots.solutionTldrEl.innerHTML =
+        '<h3>TL;DR</h3>' +
+        '<ul>' +
+        '<li>Бинарная <code>Matrix2D</code> (сырые RGBA-байты) значительно компактнее и быстрее JSON-представлений.</li>' +
+        '<li>Для <code>1024x1024</code>: <code>binary = 4.00 MB</code>, <code>JSON flat = 14.71 MB</code>, <code>JSON nested = 16.71 MB</code>.</li>' +
+        '<li>Даже после <code>gzip</code> бинарный формат меньше: <code>0.89 MB</code> против <code>1.22–1.28 MB</code>.</li>' +
+        '<li><code>Vector&lt;RGBAView&gt;</code> быстрее <code>Array&lt;RGBAObject&gt;</code>: примерно <code>1.49x</code> в базовом и <code>3.07x</code> в стресс-сценарии.</li>' +
+        '<li>По памяти <code>Vector</code> нагружает <code>arrayBuffers</code>, а массив объектов — в первую очередь <code>heapUsed</code>.</li>' +
+        '</ul>';
     }
 
     try {

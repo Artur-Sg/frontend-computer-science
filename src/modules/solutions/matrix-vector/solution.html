@@ -1,0 +1,70 @@
+<section>
+  <h4>Реализация</h4>
+
+  <details>
+    <summary>Контракт <code>ElementView</code></summary>
+    <pre><code class="language-ts">export type ElementView&lt;TValue, TInput = TValue, TAccess = unknown&gt; = {
+  readonly bytesPerElement: number;
+  read(view: DataView, byteOffset: number): TValue;
+  write(view: DataView, byteOffset: number, value: TInput): void;
+  access?(view: DataView, byteOffset: number): TAccess;
+};
+
+export function normalizeIndex(index: number, length: number): number {
+  const normalized = index &lt; 0 ? length + index : index;
+
+  if (normalized &lt; 0 || normalized &gt;= length) {
+    throw new RangeError(`Index out of bounds: ${index}`);
+  }
+
+  return normalized;
+}</code></pre>
+  </details>
+
+  <details>
+    <summary><code>ElementView</code> для RGBA</summary>
+    <pre><code class="language-ts">export const RGBAView: ElementView&lt;RGBAColor, RGBAInput, RGBAAccess&gt; = {
+  bytesPerElement: 4,
+
+  read(view: DataView, byteOffset: number): RGBAColor {
+    return [
+      view.getUint8(byteOffset),
+      view.getUint8(byteOffset + 1),
+      view.getUint8(byteOffset + 2),
+      view.getUint8(byteOffset + 3),
+    ];
+  },
+
+  write(view: DataView, byteOffset: number, value: RGBAInput): void {
+    const [red, green, blue, alpha] = normalizeColor(value);
+    view.setUint8(byteOffset, red);
+    view.setUint8(byteOffset + 1, green);
+    view.setUint8(byteOffset + 2, blue);
+    view.setUint8(byteOffset + 3, alpha);
+  },
+
+  access(view: DataView, byteOffset: number): RGBAAccess {
+    return {
+      get red() { return view.getUint8(byteOffset); },
+      set red(value: number) { view.setUint8(byteOffset, value); },
+      get green() { return view.getUint8(byteOffset + 1); },
+      set green(value: number) { view.setUint8(byteOffset + 1, value); },
+      get blue() { return view.getUint8(byteOffset + 2); },
+      set blue(value: number) { view.setUint8(byteOffset + 2, value); },
+      get alpha() { return view.getUint8(byteOffset + 3); },
+      set alpha(value: number) { view.setUint8(byteOffset + 3, value); },
+    };
+  },
+};</code></pre>
+  </details>
+
+  <details>
+    <summary>2D-матрица</summary>
+    <pre><code id="matrix2d-full-code" class="language-ts"></code></pre>
+  </details>
+
+  <details>
+    <summary>Вектор</summary>
+    <pre><code id="vector-full-code" class="language-ts"></code></pre>
+  </details>
+</section>
