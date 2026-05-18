@@ -12,7 +12,8 @@ export type SolutionKey =
   | 'arrays'
   | 'utf8-strings'
   | 'data-formats'
-  | 'matrix-vector';
+  | 'matrix-vector'
+  | 'stack-queue';
 
 export const solutionLoaders: Record<SolutionKey, () => Promise<SolutionModule>> = {
   encoding: () => import('./encoding/solution'),
@@ -23,5 +24,6 @@ export const solutionLoaders: Record<SolutionKey, () => Promise<SolutionModule>>
   arrays: () => import('./arrays/solution'),
   'utf8-strings': () => import('./utf8-strings/solution'),
   'data-formats': () => import('./data-formats/solution'),
-  'matrix-vector': () => import('./matrix-vector/solution')
+  'matrix-vector': () => import('./matrix-vector/solution'),
+  'stack-queue': () => import('./stack-queue/solution')
 };

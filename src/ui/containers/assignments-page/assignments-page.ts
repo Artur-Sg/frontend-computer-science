@@ -170,6 +170,15 @@ export class AssignmentsPage extends HTMLElement {
         '<li><code>Vector&lt;RGBAView&gt;</code> быстрее <code>Array&lt;RGBAObject&gt;</code>: примерно <code>1.49x</code> в базовом и <code>3.07x</code> в стресс-сценарии.</li>' +
         '<li>По памяти <code>Vector</code> хранит основную часть данных в <code>ArrayBuffer</code>, а массив объектов — как множество JS-объектов в куче (<code>heapUsed</code>), поэтому массив объектов создаёт больше работы для GC.</li>' +
         '</ul>';
+    } else if (item.id === 'hw-10') {
+      this.slots.solutionTldrEl.innerHTML =
+        '<h3>TL;DR</h3>' +
+        '<ul>' +
+        '<li>Реализованы две версии дека: <code>Dequeue&lt;T&gt;</code> на связном списке блоков и <code>ReallocDequeue&lt;T&gt;</code> на одном массиве с реаллокацией.</li>' +
+        '<li>В большинстве сценариев блочная реализация быстрее: <code>push/pop</code> — примерно <code>1.92x</code>, <code>unshift/shift</code> — <code>1.62x</code>, <code>mixed</code> — <code>2.16x</code>.</li>' +
+        '<li>В сценарии <code>stress growth</code> (много циклов "добавить большую пачку с двух сторон → удалить большую пачку с двух сторон") быстрее оказался <code>ReallocDequeue</code>: <code>1.97 ms</code> против <code>2.54 ms</code> у блочной реализации. Причина: после расширения он переиспользует один большой массив, а блочный дек часто создаёт и удаляет отдельные блоки.</li>' +
+        '<li>Итог: блочный дек избегает полного копирования при росте и хорошо подходит для операций с обоих концов, но имеет накладные расходы на блоки, ссылки и аллокации узлов.</li>' +
+        '</ul>';
     }
 
     try {

@@ -1,8 +1,15 @@
 <section>
+  <style>
+    .mv-accordions details + details {
+      margin-top: 10px;
+    }
+  </style>
+
   <h4>Реализация</h4>
 
+  <div class="mv-accordions">
   <details>
-    <summary>Контракт <code>ElementView</code></summary>
+    <summary>Контракт ElementView</summary>
     <pre><code class="language-ts">export type ElementView&lt;TValue, TInput = TValue, TAccess = unknown&gt; = {
   readonly bytesPerElement: number;
   read(view: DataView, byteOffset: number): TValue;
@@ -22,7 +29,7 @@ export function normalizeIndex(index: number, length: number): number {
   </details>
 
   <details>
-    <summary><code>ElementView</code> для RGBA</summary>
+    <summary>ElementView для RGBA</summary>
     <pre><code class="language-ts">export const RGBAView: ElementView&lt;RGBAColor, RGBAInput, RGBAAccess&gt; = {
   bytesPerElement: 4,
 
@@ -67,4 +74,5 @@ export function normalizeIndex(index: number, length: number): number {
     <summary>Вектор</summary>
     <pre><code id="vector-full-code" class="language-ts"></code></pre>
   </details>
+  </div>
 </section>

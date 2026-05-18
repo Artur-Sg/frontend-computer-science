@@ -46,7 +46,11 @@
    - Практика: `lectures/09-matrix-vector/practice.md`
    - ДЗ: `lectures/09-matrix-vector/homework/homework.md`
    - Решение: `lectures/09-matrix-vector/homework/solution.md`
-10. Абстрактные структуры данных. Стек и очередь.
+10. Лекция 10 — Абстрактные структуры данных. Стек и очередь.
+   - Теория: `lectures/10-stack-queue/theory.md`
+   - Практика: `lectures/10-stack-queue/practice.md`
+   - ДЗ: `lectures/10-stack-queue/homework/homework.md`
+   - Решение: `lectures/10-stack-queue/homework/solution.md`
 11. Сегменты памяти программы. Стек и куча.
 12. Многозадачность и роль ОС. Ручное и автоматическое управление памятью.
 13. Ассоциативный массив. Хеш-таблица. Хеш-функции. Разрешение коллизий.

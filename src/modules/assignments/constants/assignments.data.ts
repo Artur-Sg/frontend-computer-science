@@ -11,7 +11,8 @@ export type Assignment = {
     | 'arrays'
     | 'utf8-strings'
     | 'data-formats'
-    | 'matrix-vector';
+    | 'matrix-vector'
+    | 'stack-queue';
 };
 
 export const assignments: Assignment[] = [
@@ -68,5 +69,11 @@ export const assignments: Assignment[] = [
     title: 'ДЗ №9. Матрица и вектор',
     taskPath: 'lectures/09-matrix-vector/homework/homework.md',
     solutionModule: 'matrix-vector'
+  },
+  {
+    id: 'hw-10',
+    title: 'ДЗ №10. Стек, очередь и дек',
+    taskPath: 'lectures/10-stack-queue/homework/homework.md',
+    solutionModule: 'stack-queue'
   }
 ];

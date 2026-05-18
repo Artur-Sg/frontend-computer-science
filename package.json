@@ -21,6 +21,7 @@
     "test:vector": "tsx src/modules/solutions/matrix-vector/vector.test.ts",
     "test:rgba-view": "tsx src/modules/solutions/matrix-vector/rgba-view.test.ts",
     "test:matrix-vector": "npm run test:matrix2d && npm run test:vector && npm run test:rgba-view",
+    "test:dequeue": "tsx src/modules/solutions/stack-queue/dequeue.test.ts",
     "bench:pixel-stream": "tsx src/modules/solutions/pixel-stream/benchmark.ts",
     "bench:pixel-stream:jitless": "node --jitless ./node_modules/.bin/tsx src/modules/solutions/pixel-stream/benchmark.ts",
     "bench:arrays": "tsx src/modules/solutions/arrays/benchmark.ts",
@@ -29,7 +30,8 @@
     "bench:data-formats": "node --expose-gc --import tsx src/modules/solutions/data-formats/benchmark.ts",
     "bench:matrix": "tsx src/modules/solutions/matrix-vector/matrix-benchmark.ts",
     "bench:matrix-vector": "npm run bench:matrix",
-    "bench:vector": "node --expose-gc --import tsx src/modules/solutions/matrix-vector/vector-benchmark.ts"
+    "bench:vector": "node --expose-gc --import tsx src/modules/solutions/matrix-vector/vector-benchmark.ts",
+    "bench:stack-queue": "tsx src/modules/solutions/stack-queue/benchmark.ts"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
