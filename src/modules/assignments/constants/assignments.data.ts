@@ -12,7 +12,9 @@ export type Assignment = {
     | 'utf8-strings'
     | 'data-formats'
     | 'matrix-vector'
-    | 'stack-queue';
+    | 'stack-queue'
+    | 'memory-manager'
+    | 'graph';
 };
 
 export const assignments: Assignment[] = [
@@ -75,5 +77,17 @@ export const assignments: Assignment[] = [
     title: 'ДЗ №10. Стек, очередь и дек',
     taskPath: 'lectures/10-stack-queue/homework/homework.md',
     solutionModule: 'stack-queue'
+  },
+  {
+    id: 'hw-11',
+    title: 'ДЗ №11. Сегменты памяти программы',
+    taskPath: 'lectures/11-memory-segments/homework/homework.md',
+    solutionModule: 'memory-manager'
+  },
+  {
+    id: 'hw-15',
+    title: 'ДЗ №15. Графы. Способы задания графа',
+    taskPath: 'lectures/15-graph/homework/homework.md',
+    solutionModule: 'graph'
   }
 ];

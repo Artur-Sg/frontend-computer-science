@@ -51,7 +51,11 @@
    - Практика: `lectures/10-stack-queue/practice.md`
    - ДЗ: `lectures/10-stack-queue/homework/homework.md`
    - Решение: `lectures/10-stack-queue/homework/solution.md`
-11. Сегменты памяти программы. Стек и куча.
+11. Лекция 11 — Сегменты памяти программы. Стек и куча.
+   - Теория: `lectures/11-memory-segments/theory.md`
+   - Практика: `lectures/11-memory-segments/practice.md`
+   - ДЗ: `lectures/11-memory-segments/homework/homework.md`
+   - Решение: `lectures/11-memory-segments/homework/solution.md`
 12. Многозадачность и роль ОС. Ручное и автоматическое управление памятью.
 13. Ассоциативный массив. Хеш-таблица. Хеш-функции. Разрешение коллизий.
 14. Операции над структурами данных и их сложность. Сортировка. Бинарный поиск.

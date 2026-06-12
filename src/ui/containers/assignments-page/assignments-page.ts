@@ -179,6 +179,15 @@ export class AssignmentsPage extends HTMLElement {
         '<li>В сценарии <code>stress growth</code> (много циклов "добавить большую пачку с двух сторон → удалить большую пачку с двух сторон") быстрее оказался <code>ReallocDequeue</code>: <code>1.97 ms</code> против <code>2.54 ms</code> у блочной реализации. Причина: после расширения он переиспользует один большой массив, а блочный дек часто создаёт и удаляет отдельные блоки.</li>' +
         '<li>Итог: блочный дек избегает полного копирования при росте и хорошо подходит для операций с обоих концов, но имеет накладные расходы на блоки, ссылки и аллокации узлов.</li>' +
         '</ul>';
+    } else if (item.id === 'hw-11') {
+      this.slots.solutionTldrEl.innerHTML =
+        '<h3>TL;DR</h3>' +
+        '<ul>' +
+        '<li><code>Memory</code> управляет одним общим <code>ArrayBuffer</code>, разделённым на два региона: <code>stack</code> и <code>heap</code>.</li>' +
+        '<li><code>stack</code> начинается с <code>offset = 0</code>, растёт вперёд до <code>stackSize</code> и работает строго по <code>LIFO</code> через <code>push/pop</code>.</li>' +
+        '<li><code>heap</code> начинается после стекового региона, поддерживает <code>alloc/free</code>, переиспользует освобождённые блоки и склеивает соседние свободные диапазоны.</li>' +
+        '<li><code>Pointer</code> — безопасная обёртка над <code>offset + size</code>: после <code>pop/free</code> указатель становится недействительным, а повторный <code>free()</code> выбрасывает ошибку.</li>' +
+        '</ul>';
     }
 
     try {

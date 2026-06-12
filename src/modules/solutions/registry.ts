@@ -13,7 +13,9 @@ export type SolutionKey =
   | 'utf8-strings'
   | 'data-formats'
   | 'matrix-vector'
-  | 'stack-queue';
+  | 'stack-queue'
+  | 'memory-manager'
+  | 'graph';
 
 export const solutionLoaders: Record<SolutionKey, () => Promise<SolutionModule>> = {
   encoding: () => import('./encoding/solution'),
@@ -25,5 +27,7 @@ export const solutionLoaders: Record<SolutionKey, () => Promise<SolutionModule>>
   'utf8-strings': () => import('./utf8-strings/solution'),
   'data-formats': () => import('./data-formats/solution'),
   'matrix-vector': () => import('./matrix-vector/solution'),
-  'stack-queue': () => import('./stack-queue/solution')
+  'stack-queue': () => import('./stack-queue/solution'),
+  'memory-manager': () => import('./memory-manager/solution'),
+  'graph': () => import('./graph/solution')
 };

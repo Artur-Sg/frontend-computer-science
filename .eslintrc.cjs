@@ -44,6 +44,8 @@ module.exports = {
     'no-plusplus': 'off',
     'no-continue': 'off',
     'class-methods-use-this': 'off',
+    'max-classes-per-file': 'off',
+    '@typescript-eslint/lines-between-class-members': 'off',
     'no-param-reassign': 'off',
     'no-console': 'off',
     'import/extensions': [
