@@ -1,5 +1,6 @@
 import { strict as assert } from 'node:assert';
 import { Memory } from './memory';
+import { Rc } from './RC';
 
 function test(name: string, fn: () => void): void {
   try {
@@ -190,6 +191,158 @@ test('alloc выбрасывает ошибку при некорректном 
 
   assert.throws(() => {
     memory.alloc(0);
+  });
+});
+
+test('Symbol.dispose освобождает указатель из кучи', () => {
+  const memory = createMemory(100, { stack: 10 });
+
+  const pointer = memory.alloc(10);
+
+  pointer[Symbol.dispose]();
+
+  assert.throws(() => {
+    pointer.deref();
+  });
+});
+
+test('Symbol.dispose выбрасывает ошибку при повторном освобождении', () => {
+  const memory = createMemory(100, { stack: 10 });
+
+  const pointer = memory.alloc(10);
+
+  pointer[Symbol.dispose]();
+
+  assert.throws(() => {
+    pointer[Symbol.dispose]();
+  });
+});
+
+test('Rc делегирует change и deref во внутренний указатель', () => {
+  const memory = createMemory(100, { stack: 10 });
+
+  const pointer = new Rc(memory.alloc(3));
+
+  pointer.change(new Uint8Array([1, 2, 3]).buffer);
+
+  assert.deepEqual(bytes(pointer.deref()), [1, 2, 3]);
+});
+
+test('Rc делегирует change и deref во внутренний указатель', () => {
+  const memory = createMemory(100, { stack: 10 });
+
+  const pointer = new Rc(memory.alloc(3));
+
+  pointer.change(new Uint8Array([1, 2, 3]).buffer);
+
+  assert.deepEqual(bytes(pointer.deref()), [1, 2, 3]);
+});
+
+test('Rc.clone увеличивает счётчик ссылок', () => {
+  const memory = createMemory(100, { stack: 10 });
+
+  const pointer1 = new Rc(memory.alloc(3));
+  const pointer2 = pointer1.clone();
+
+  assert.equal(pointer1.refCount, 2);
+  assert.equal(pointer2.refCount, 2);
+});
+
+test('Rc.clone увеличивает счётчик ссылок', () => {
+  const memory = createMemory(100, { stack: 10 });
+
+  const pointer1 = new Rc(memory.alloc(3));
+  const pointer2 = pointer1.clone();
+
+  assert.equal(pointer1.refCount, 2);
+  assert.equal(pointer2.refCount, 2);
+});
+
+test('Rc.clone создаёт владельца того же блока памяти', () => {
+  const memory = createMemory(100, { stack: 10 });
+
+  const pointer1 = new Rc(memory.alloc(3));
+  const pointer2 = pointer1.clone();
+
+  pointer1.change(new Uint8Array([1, 2, 3]).buffer);
+
+  assert.deepEqual(bytes(pointer2.deref()), [1, 2, 3]);
+
+  pointer2.change(new Uint8Array([4, 5, 6]).buffer);
+
+  assert.deepEqual(bytes(pointer1.deref()), [4, 5, 6]);
+});
+
+test('Rc освобождает память после dispose последнего владельца', () => {
+  const memory = createMemory(100, { stack: 10 });
+
+  const pointer1 = new Rc(memory.alloc(4));
+  const pointer2 = pointer1.clone();
+
+  pointer1.change(new Uint8Array([1, 2, 3, 4]).buffer);
+
+  pointer1[Symbol.dispose]();
+
+  // Память ещё жива, потому что есть pointer2.
+  assert.deepEqual(bytes(pointer2.deref()), [1, 2, 3, 4]);
+
+  pointer2[Symbol.dispose]();
+
+  // Теперь владельцев нет, внутренний Pointer освобождён.
+  assert.throws(() => {
+    pointer2.deref();
+  });
+});
+
+test('Rc не освобождает память, пока есть другие владельцы', () => {
+  const memory = createMemory(100, { stack: 10 });
+
+  const pointer1 = new Rc(memory.alloc(3));
+  const pointer2 = pointer1.clone();
+
+  pointer1.change(new Uint8Array([1, 2, 3]).buffer);
+
+  pointer1[Symbol.dispose]();
+
+  assert.equal(pointer2.refCount, 1);
+  assert.deepEqual(bytes(pointer2.deref()), [1, 2, 3]);
+});
+
+test('Rc освобождает память после dispose последнего владельца', () => {
+  const memory = createMemory(100, { stack: 10 });
+
+  const pointer1 = new Rc(memory.alloc(3));
+  const pointer2 = pointer1.clone();
+
+  pointer1[Symbol.dispose]();
+  pointer2[Symbol.dispose]();
+
+  assert.throws(() => {
+    pointer2.deref();
+  });
+});
+
+test('Rc выбрасывает ошибку при повторном dispose одного владельца', () => {
+  const memory = createMemory(100, { stack: 10 });
+
+  const pointer = new Rc(memory.alloc(3));
+
+  pointer[Symbol.dispose]();
+
+  assert.throws(() => {
+    pointer[Symbol.dispose]();
+  });
+});
+
+test('Rc не позволяет clone после dispose', () => {
+  const memory = createMemory(100, { stack: 10 });
+
+  const pointer = new Rc(memory.alloc(3));
+
+  pointer[Symbol.dispose]();
+
+  assert.throws(() => {
+    pointer.clone();
   });
 });
 

@@ -21,79 +21,79 @@ export type Assignment = {
 export const assignments: Assignment[] = [
   {
     id: 'hw-01',
-    title: 'ДЗ №1. Кодирование',
+    title: '№1. Кодирование',
     taskPath: 'lectures/01-encoding/homework/homework.md',
     solutionModule: 'encoding'
   },
   {
     id: 'hw-02',
-    title: 'ДЗ №2. Интерпретатор байткода',
+    title: '№2. Интерпретатор байткода',
     taskPath: 'lectures/02-languages/homework/homework.md',
     solutionModule: 'bytecode'
   },
   {
     id: 'hw-03',
-    title: 'ДЗ №3. BCD 8421',
+    title: '№3. BCD 8421',
     taskPath: 'lectures/03-number-encoding/homework/homework.md',
     solutionModule: 'bcd'
   },
   {
     id: 'hw-04',
-    title: 'ДЗ №4. Циклические сдвиги',
+    title: '№4. Циклические сдвиги',
     taskPath: 'lectures/04-bit-operations/homework/homework.md',
     solutionModule: 'bit-ops'
   },
   {
     id: 'hw-05',
-    title: 'ДЗ №5. RGBA PixelStream',
+    title: '№5. RGBA PixelStream',
     taskPath: 'lectures/05-processor-memory/homework/homework.md',
     solutionModule: 'pixel-stream'
   },
   {
     id: 'hw-06',
-    title: 'ДЗ №6. Массивы и производительность',
+    title: '№6. Массивы и производительность',
     taskPath: 'lectures/06-arrays/homework/homework.md',
     solutionModule: 'arrays'
   },
   {
     id: 'hw-07',
-    title: 'ДЗ №7. UTF-8 сериализация строк',
+    title: '№7. UTF-8 сериализация строк',
     taskPath: 'lectures/07-typed-arrays/homework/homework.md',
     solutionModule: 'utf8-strings'
   },
   {
     id: 'hw-08',
-    title: 'ДЗ №8. Форматы обмена данными',
+    title: '№8. Форматы обмена данными',
     taskPath: 'lectures/08-data-formats/homework/homework.md',
     solutionModule: 'data-formats'
   },
   {
     id: 'hw-09',
-    title: 'ДЗ №9. Матрица и вектор',
+    title: '№9. Матрица и вектор',
     taskPath: 'lectures/09-matrix-vector/homework/homework.md',
     solutionModule: 'matrix-vector'
   },
   {
     id: 'hw-10',
-    title: 'ДЗ №10. Стек, очередь и дек',
+    title: '№10. Стек, очередь и дек',
     taskPath: 'lectures/10-stack-queue/homework/homework.md',
     solutionModule: 'stack-queue'
   },
   {
     id: 'hw-11',
-    title: 'ДЗ №11. Сегменты памяти программы',
+    title: '№11. Сегменты памяти программы',
     taskPath: 'lectures/11-memory-segments/homework/homework.md',
     solutionModule: 'memory-manager'
   },
   {
     id: 'hw-12',
-    title: 'ДЗ №12. ОС, GC и время жизни ресурсов',
+    title: '№12. Многозадачность и роль ОС',
     taskPath: 'lectures/12-os-memory/homework/homework.md',
     solutionModule: 'os-memory'
   },
   {
     id: 'hw-15',
-    title: 'ДЗ №15. Графы. Способы задания графа',
+    title: '№15. Графы. Способы задания графа',
     taskPath: 'lectures/15-graph/homework/homework.md',
     solutionModule: 'graph'
   }

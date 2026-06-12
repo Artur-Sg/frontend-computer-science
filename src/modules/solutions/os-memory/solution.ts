@@ -1,14 +1,20 @@
 import Prism from 'prismjs';
 import templateHtml from './solution.html?raw';
 import memorySource from './memory.ts?raw';
+import rcSource from './RC.ts?raw';
 
 export const template = templateHtml;
 
 export function init(root: HTMLElement): void {
   const memoryEl = root.querySelector<HTMLElement>('#memory-code');
+  const rcEl = root.querySelector<HTMLElement>('#rc-code');
 
   if (memoryEl) {
     memoryEl.textContent = memorySource;
+  }
+
+  if (rcEl) {
+    rcEl.textContent = rcSource;
   }
 
   const blocks = root.querySelectorAll<HTMLElement>('pre code');

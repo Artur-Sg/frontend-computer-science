@@ -69,6 +69,10 @@ export class Pointer {
     this.memory.releaseHeapBlock(this.offset, this.size);
     this.invalidate();
   }
+
+  [Symbol.dispose](): void {
+    this.free();
+  }
 }
 
 export class Memory {

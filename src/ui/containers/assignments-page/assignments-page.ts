@@ -192,10 +192,11 @@ export class AssignmentsPage extends HTMLElement {
       this.slots.solutionTldrEl.innerHTML =
         '<h3>TL;DR</h3>' +
         '<ul>' +
-        '<li>Лекция 12 связывает работу ОС, виртуальную память и модели управления памятью в языках программирования.</li>' +
-        '<li>Практический акцент в JS: GC не делает освобождение ресурсов детерминированным.</li>' +
-        '<li><code>WeakMap</code> / <code>WeakRef</code> подходят для кэшей и метаданных, которые не должны удерживать объекты живыми.</li>' +
-        '<li><code>using</code> и <code>Symbol.dispose</code> подходят для явного и предсказуемого освобождения ресурсов.</li>' +
+        '<li>Для части <strong>a</strong> достаточно добавить в <code>Pointer</code> поддержку <code>[Symbol.dispose]()</code> и внутри вызвать уже существующий <code>free()</code>.</li>' +
+        '<li>После этого heap-указатель из <code>mem.alloc(...)</code> можно использовать через <code>using</code>, а память будет освобождаться автоматически при выходе из области видимости.</li>' +
+        '<li>Внутренняя модель памяти не меняется: <code>free()</code> по-прежнему освобождает только heap-блоки, запрещает повторное освобождение и инвалидирует указатель.</li>' +
+        '<li>Для части <strong>b</strong> добавлен <code>Rc</code> — обёртка над <code>Pointer</code> со счётчиком ссылок. Все клоны <code>Rc</code> разделяют общий <code>state</code>, внутри которого хранится <code>Pointer</code> и <code>count</code>.</li>' +
+        '<li><code>clone()</code> увеличивает общий <code>count</code>, <code>[Symbol.dispose]()</code> уменьшает его, а память освобождается только тогда, когда уничтожен последний владелец и <code>count</code> стал равен <code>0</code>.</li>' +
         '</ul>';
     }
 
