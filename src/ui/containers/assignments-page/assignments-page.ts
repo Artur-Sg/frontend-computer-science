@@ -188,6 +188,15 @@ export class AssignmentsPage extends HTMLElement {
         '<li><code>heap</code> начинается после стекового региона, поддерживает <code>alloc/free</code>, переиспользует освобождённые блоки и склеивает соседние свободные диапазоны.</li>' +
         '<li><code>Pointer</code> — безопасная обёртка над <code>offset + size</code>: после <code>pop/free</code> указатель становится недействительным, а повторный <code>free()</code> выбрасывает ошибку.</li>' +
         '</ul>';
+    } else if (item.id === 'hw-12') {
+      this.slots.solutionTldrEl.innerHTML =
+        '<h3>TL;DR</h3>' +
+        '<ul>' +
+        '<li>Лекция 12 связывает работу ОС, виртуальную память и модели управления памятью в языках программирования.</li>' +
+        '<li>Практический акцент в JS: GC не делает освобождение ресурсов детерминированным.</li>' +
+        '<li><code>WeakMap</code> / <code>WeakRef</code> подходят для кэшей и метаданных, которые не должны удерживать объекты живыми.</li>' +
+        '<li><code>using</code> и <code>Symbol.dispose</code> подходят для явного и предсказуемого освобождения ресурсов.</li>' +
+        '</ul>';
     }
 
     try {

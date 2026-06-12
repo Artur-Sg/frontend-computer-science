@@ -14,6 +14,7 @@ export type Assignment = {
     | 'matrix-vector'
     | 'stack-queue'
     | 'memory-manager'
+    | 'os-memory'
     | 'graph';
 };
 
@@ -83,6 +84,12 @@ export const assignments: Assignment[] = [
     title: 'ДЗ №11. Сегменты памяти программы',
     taskPath: 'lectures/11-memory-segments/homework/homework.md',
     solutionModule: 'memory-manager'
+  },
+  {
+    id: 'hw-12',
+    title: 'ДЗ №12. ОС, GC и время жизни ресурсов',
+    taskPath: 'lectures/12-os-memory/homework/homework.md',
+    solutionModule: 'os-memory'
   },
   {
     id: 'hw-15',

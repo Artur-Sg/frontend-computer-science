@@ -15,6 +15,7 @@ export type SolutionKey =
   | 'matrix-vector'
   | 'stack-queue'
   | 'memory-manager'
+  | 'os-memory'
   | 'graph';
 
 export const solutionLoaders: Record<SolutionKey, () => Promise<SolutionModule>> = {
@@ -29,5 +30,6 @@ export const solutionLoaders: Record<SolutionKey, () => Promise<SolutionModule>>
   'matrix-vector': () => import('./matrix-vector/solution'),
   'stack-queue': () => import('./stack-queue/solution'),
   'memory-manager': () => import('./memory-manager/solution'),
+  'os-memory': () => import('./os-memory/solution'),
   'graph': () => import('./graph/solution')
 };

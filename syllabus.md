@@ -56,7 +56,11 @@
    - Практика: `lectures/11-memory-segments/practice.md`
    - ДЗ: `lectures/11-memory-segments/homework/homework.md`
    - Решение: `lectures/11-memory-segments/homework/solution.md`
-12. Многозадачность и роль ОС. Ручное и автоматическое управление памятью.
+12. Лекция 12 — Многозадачность и роль ОС. Ручное и автоматическое управление памятью.
+   - Теория: `lectures/12-os-memory/theory.md`
+   - Практика: `lectures/12-os-memory/practice.md`
+   - ДЗ: `lectures/12-os-memory/homework/homework.md`
+   - Решение: `lectures/12-os-memory/homework/solution.md`
 13. Ассоциативный массив. Хеш-таблица. Хеш-функции. Разрешение коллизий.
 14. Операции над структурами данных и их сложность. Сортировка. Бинарный поиск.
 15. Графы. Способы задания графа. Обход узлов графа. Топологическая сортировка графа.
