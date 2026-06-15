@@ -15,6 +15,7 @@ export type Assignment = {
     | 'stack-queue'
     | 'memory-manager'
     | 'os-memory'
+    | 'hash-table'
     | 'graph';
 };
 
@@ -90,6 +91,12 @@ export const assignments: Assignment[] = [
     title: '№12. Многозадачность и роль ОС',
     taskPath: 'lectures/12-os-memory/homework/homework.md',
     solutionModule: 'os-memory'
+  },
+  {
+    id: 'hw-13',
+    title: '№13. Ассоциативный массив и хеш-таблица',
+    taskPath: 'lectures/13-hash-table/homework/homework.md',
+    solutionModule: 'hash-table'
   },
   {
     id: 'hw-15',

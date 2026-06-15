@@ -198,6 +198,16 @@ export class AssignmentsPage extends HTMLElement {
         '<li>Для части <strong>b</strong> добавлен <code>Rc</code> — обёртка над <code>Pointer</code> со счётчиком ссылок. Все клоны <code>Rc</code> разделяют общий <code>state</code>, внутри которого хранится <code>Pointer</code> и <code>count</code>.</li>' +
         '<li><code>clone()</code> увеличивает общий <code>count</code>, <code>[Symbol.dispose]()</code> уменьшает его, а память освобождается только тогда, когда уничтожен последний владелец и <code>count</code> стал равен <code>0</code>.</li>' +
         '</ul>';
+    } else if (item.id === 'hw-13') {
+      this.slots.solutionTldrEl.innerHTML =
+        '<h3>TL;DR</h3>' +
+        '<ul>' +
+        '<li><code>HashMap</code> — реализация хэш-таблицы, которая хранит пары <code>key → value</code> во внутреннем массиве бакетов.</li>' +
+        '<li>Ключами могут быть строки, числа и объекты: для строк используется <code>FNV-1a</code>, для чисел — числовой хэш, а для объектов создаётся внутренний id через <code>WeakMap</code>.</li>' +
+        '<li>Коллизии решаются методом цепочек: если несколько ключей попали в один бакет, они сохраняются в связном списке <code>EntryNode</code>.</li>' +
+        '<li>Таблица поддерживает <code>set</code>, <code>get</code>, <code>has</code>, <code>delete</code> и <code>clear</code>.</li>' +
+        '<li>При превышении <code>loadFactor</code> внутренний буфер увеличивается в два раза, после чего все записи перераспределяются по новым бакетам.</li>' +
+        '</ul>';
     }
 
     try {

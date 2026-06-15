@@ -2,9 +2,15 @@ interface Entry {
   key: unknown;
   value: unknown;
 }
+
+interface EntryNode {
+  entry: Entry;
+  next: EntryNode | null;
+}
+
 export class HashMap {
   private capacity: number;
-  private buckets: Entry[][];
+  private buckets: Array<EntryNode | null>;
   private loadFactor: number;
   private objectIds = new WeakMap<object, number>();
   private nextObjectId = 1;
@@ -13,7 +19,7 @@ export class HashMap {
 
   constructor(capacity: number = 8, loadFactor = 0.65) {
     this.capacity = capacity;
-    this.buckets = Array.from({ length: capacity }, () => []);
+    this.buckets = Array.from({ length: capacity }, () => null);
     this.loadFactor = loadFactor;
   }
 
@@ -22,53 +28,61 @@ export class HashMap {
   }
 
   public get(key: unknown): unknown | undefined {
-    const index = this.getIndex(key);
-    const item = this.buckets[index].find((entry) => entry.key === key);
+    const item = this.findNode(key)?.entry;
 
     return item?.value;
   }
 
   public set(key: unknown, value: unknown): void {
     const index = this.getIndex(key);
-    const bucket = this.buckets[index];
-    const item = bucket.find((entry) => entry.key === key);
+    const node = this.findNode(key);
 
-    if (item) {
-      item.value = value;
-    } else {
-      bucket.push({ key, value });
-      this.size += 1;
-      this.resize();
+    if (node) {
+      node.entry.value = value;
+
+      return;
     }
+
+    this.buckets[index] = {
+      entry: { key, value },
+      next: this.buckets[index],
+    };
+    this.size += 1;
+    this.resize();
   }
 
   public has(key: unknown): boolean {
-    const index = this.getIndex(key);
-    const hasEntry = this.buckets[index].some((entry) => entry.key === key);
-
-    return hasEntry;
+    return this.findNode(key) != null;
   }
 
   public delete(key: unknown): unknown | undefined {
     const index = this.getIndex(key);
-    const bucket = this.buckets[index];
-    const itemIndex = bucket.findIndex((entry) => entry.key === key);
+    let current = this.buckets[index];
+    let previous: EntryNode | null = null;
 
-    if (itemIndex === -1) {
-      return undefined;
+    while (current) {
+      if (current.entry.key === key) {
+        if (previous) {
+          previous.next = current.next;
+        } else {
+          this.buckets[index] = current.next;
+        }
+
+        this.size -= 1;
+
+        return current.entry.value;
+      }
+
+      previous = current;
+      current = current.next;
     }
 
-    const item = bucket[itemIndex];
-
-    bucket.splice(itemIndex, 1);
-    this.size -= 1;
-
-    return item.value;
+    return undefined;
   }
 
   public clear(): void {
     this.size = 0;
-    this.buckets = Array.from({ length: this.capacity }, () => []);
+    this.buckets = Array.from({ length: this.capacity }, () => null);
   }
 
   private getIndex(key: unknown): number {
@@ -102,15 +116,35 @@ export class HashMap {
     const newCapacity = this.capacity * 2;
 
     this.capacity = newCapacity;
-    this.buckets = Array.from({ length: newCapacity }, () => []);
+    this.buckets = Array.from({ length: newCapacity }, () => null);
 
     for (const bucket of oldBuckets) {
-      for (const entry of bucket) {
-        const index = this.getIndex(entry.key);
+      let current = bucket;
 
-        this.buckets[index].push(entry);
+      while (current) {
+        const { next } = current;
+        const index = this.getIndex(current.entry.key);
+
+        current.next = this.buckets[index];
+        this.buckets[index] = current;
+        current = next;
       }
     }
+  }
+
+  private findNode(key: unknown): EntryNode | null {
+    const index = this.getIndex(key);
+    let current = this.buckets[index];
+
+    while (current) {
+      if (current.entry.key === key) {
+        return current;
+      }
+
+      current = current.next;
+    }
+
+    return null;
   }
 
   private hashObject(key: object): number {
