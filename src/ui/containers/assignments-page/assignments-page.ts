@@ -208,6 +208,15 @@ export class AssignmentsPage extends HTMLElement {
         '<li>Таблица поддерживает <code>set</code>, <code>get</code>, <code>has</code>, <code>delete</code> и <code>clear</code>.</li>' +
         '<li>При превышении <code>loadFactor</code> внутренний буфер увеличивается в два раза, после чего все записи перераспределяются по новым бакетам.</li>' +
         '</ul>';
+    } else if (item.id === 'hw-14') {
+      this.slots.solutionTldrEl.innerHTML =
+        '<h3>TL;DR</h3>' +
+        '<ul>' +
+        '<li>Реализованы функции <code>indexOf</code> и <code>lastIndexOf</code> для отсортированного массива с использованием бинарного поиска.</li>' +
+        '<li><code>indexOf</code> находит первое вхождение значения, а <code>lastIndexOf</code> — последнее. Если значение не найдено, обе функции возвращают <code>-1</code>.</li>' +
+        '<li>Функции поддерживают поиск по массивам чисел и строк, а также по массивам объектов через <code>selector</code>, например <code>(item) => item.age</code>.</li>' +
+        '<li>Важно: массив должен быть заранее отсортирован по тому же значению, по которому выполняется поиск.</li>' +
+        '</ul>';
     }
 
     try {

@@ -66,7 +66,11 @@
    - Практика: `lectures/13-hash-table/practice.md`
    - ДЗ: `lectures/13-hash-table/homework/homework.md`
    - Решение: `lectures/13-hash-table/homework/solution.md`
-14. Операции над структурами данных и их сложность. Сортировка. Бинарный поиск.
+14. Лекция 14 — Операции над структурами данных и их сложность. Сортировка. Бинарный поиск.
+   - Теория: `lectures/14-sorting-search/theory.md`
+   - Практика: `lectures/14-sorting-search/practice.md`
+   - ДЗ: `lectures/14-sorting-search/homework/homework.md`
+   - Решение: `lectures/14-sorting-search/homework/solution.md`
 15. Графы. Способы задания графа. Обход узлов графа. Топологическая сортировка графа.
 16. Деревья. Деревья поиска. Самобалансирующиеся деревья поиска.
 17. Очередь с приоритетом. Бинарная куча.

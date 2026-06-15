@@ -16,6 +16,7 @@ export type Assignment = {
     | 'memory-manager'
     | 'os-memory'
     | 'hash-table'
+    | 'sorting-search'
     | 'graph';
 };
 
@@ -97,6 +98,12 @@ export const assignments: Assignment[] = [
     title: '№13. Ассоциативный массив и хеш-таблица',
     taskPath: 'lectures/13-hash-table/homework/homework.md',
     solutionModule: 'hash-table'
+  },
+  {
+    id: 'hw-14',
+    title: '№14. Операции над структурами данных и их сложность',
+    taskPath: 'lectures/14-sorting-search/homework/homework.md',
+    solutionModule: 'sorting-search'
   },
   {
     id: 'hw-15',

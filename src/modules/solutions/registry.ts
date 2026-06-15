@@ -17,6 +17,7 @@ export type SolutionKey =
   | 'memory-manager'
   | 'os-memory'
   | 'hash-table'
+  | 'sorting-search'
   | 'graph';
 
 export const solutionLoaders: Record<SolutionKey, () => Promise<SolutionModule>> = {
@@ -33,5 +34,6 @@ export const solutionLoaders: Record<SolutionKey, () => Promise<SolutionModule>>
   'memory-manager': () => import('./memory-manager/solution'),
   'os-memory': () => import('./os-memory/solution'),
   'hash-table': () => import('./hash-table/solution'),
+  'sorting-search': () => import('./sorting-search/solution'),
   'graph': () => import('./graph/solution')
 };
