@@ -1,7 +1,7 @@
 <section>
   <h3>Кольцевой буфер</h3>
   <p>Структура хранит элементы в циклическом массиве и даёт O(1) для <em>push</em>, <em>pop</em>, <em>shift</em>, <em>unshift</em>.</p>
-  <details>
+  <details open>
     <summary>Реализация</summary>
     <pre><code class="language-ts">export class CircularBuffer&lt;T&gt; {
   private buffer: (T | undefined)[];

@@ -8,7 +8,7 @@
   <h4>Реализация</h4>
 
   <div class="mv-accordions">
-  <details>
+  <details open>
     <summary>Контракт ElementView</summary>
     <pre><code class="language-ts">export type ElementView&lt;TValue, TInput = TValue, TAccess = unknown&gt; = {
   readonly bytesPerElement: number;
@@ -28,7 +28,7 @@ export function normalizeIndex(index: number, length: number): number {
 }</code></pre>
   </details>
 
-  <details>
+  <details open>
     <summary>ElementView для RGBA</summary>
     <pre><code class="language-ts">export const RGBAView: ElementView&lt;RGBAColor, RGBAInput, RGBAAccess&gt; = {
   bytesPerElement: 4,
@@ -65,12 +65,12 @@ export function normalizeIndex(index: number, length: number): number {
 };</code></pre>
   </details>
 
-  <details>
+  <details open>
     <summary>2D-матрица</summary>
     <pre><code id="matrix2d-full-code" class="language-ts"></code></pre>
   </details>
 
-  <details>
+  <details open>
     <summary>Вектор</summary>
     <pre><code id="vector-full-code" class="language-ts"></code></pre>
   </details>
