@@ -16,6 +16,7 @@ export type SolutionKey =
   | 'stack-queue'
   | 'memory-manager'
   | 'os-memory'
+  | 'hash-table'
   | 'graph';
 
 export const solutionLoaders: Record<SolutionKey, () => Promise<SolutionModule>> = {
@@ -31,5 +32,6 @@ export const solutionLoaders: Record<SolutionKey, () => Promise<SolutionModule>>
   'stack-queue': () => import('./stack-queue/solution'),
   'memory-manager': () => import('./memory-manager/solution'),
   'os-memory': () => import('./os-memory/solution'),
+  'hash-table': () => import('./hash-table/solution'),
   'graph': () => import('./graph/solution')
 };

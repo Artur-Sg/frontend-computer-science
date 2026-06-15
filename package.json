@@ -24,6 +24,7 @@
     "test:dequeue": "tsx src/modules/solutions/stack-queue/dequeue.test.ts",
     "test:memory-manager": "tsx src/modules/solutions/memory-manager/memory.test.ts",
     "test:os-memory": "tsx src/modules/solutions/os-memory/memory.test.ts",
+    "test:hash-table": "tsx src/modules/solutions/hash-table/hash-table.test.ts",
     "test:matrix-graph": "tsx src/modules/solutions/graph/matrix-graph.test.ts",
     "bench:pixel-stream": "tsx src/modules/solutions/pixel-stream/benchmark.ts",
     "bench:pixel-stream:jitless": "node --jitless ./node_modules/.bin/tsx src/modules/solutions/pixel-stream/benchmark.ts",

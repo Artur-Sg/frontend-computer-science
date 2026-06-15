@@ -61,7 +61,11 @@
    - Практика: `lectures/12-os-memory/practice.md`
    - ДЗ: `lectures/12-os-memory/homework/homework.md`
    - Решение: `lectures/12-os-memory/homework/solution.md`
-13. Ассоциативный массив. Хеш-таблица. Хеш-функции. Разрешение коллизий.
+13. Лекция 13 — Ассоциативный массив. Хеш-таблица. Хеш-функции. Разрешение коллизий.
+   - Теория: `lectures/13-hash-table/theory.md`
+   - Практика: `lectures/13-hash-table/practice.md`
+   - ДЗ: `lectures/13-hash-table/homework/homework.md`
+   - Решение: `lectures/13-hash-table/homework/solution.md`
 14. Операции над структурами данных и их сложность. Сортировка. Бинарный поиск.
 15. Графы. Способы задания графа. Обход узлов графа. Топологическая сортировка графа.
 16. Деревья. Деревья поиска. Самобалансирующиеся деревья поиска.
