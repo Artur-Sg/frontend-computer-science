@@ -184,9 +184,10 @@ export class AssignmentsPage extends HTMLElement {
         '<h3>TL;DR</h3>' +
         '<ul>' +
         '<li><code>Memory</code> управляет одним общим <code>ArrayBuffer</code>, разделённым на два региона: <code>stack</code> и <code>heap</code>.</li>' +
-        '<li><code>stack</code> начинается с <code>offset = 0</code>, растёт вперёд до <code>stackSize</code> и работает строго по <code>LIFO</code> через <code>push/pop</code>.</li>' +
-        '<li><code>heap</code> начинается после стекового региона, поддерживает <code>alloc/free</code>, переиспользует освобождённые блоки и склеивает соседние свободные диапазоны.</li>' +
-        '<li><code>Pointer</code> — безопасная обёртка над <code>offset + size</code>: после <code>pop/free</code> указатель становится недействительным, а повторный <code>free()</code> выбрасывает ошибку.</li>' +
+        '<li>Перед <code>push</code> и <code>alloc</code> адрес блока выравнивается по <code>alignment</code>, поэтому менеджер учитывает не только полезные данные, но и возможный padding.</li>' +
+        '<li><code>Pointer</code> хранит и адрес данных (<code>offset/size</code>), и реальные границы выделенного блока (<code>blockOffset/blockSize</code>), чтобы корректно освобождать память.</li>' +
+        '<li><code>stack</code> работает строго по <code>LIFO</code> через <code>push/pop</code>, а <code>heap</code> поддерживает <code>alloc/free</code>, переиспользует освобождённые блоки и склеивает соседние свободные диапазоны.</li>' +
+        '<li>После <code>pop/free</code> указатель становится недействительным, а повторный <code>free()</code> выбрасывает ошибку.</li>' +
         '</ul>';
     } else if (item.id === 'hw-12') {
       this.slots.solutionTldrEl.innerHTML =
@@ -194,7 +195,7 @@ export class AssignmentsPage extends HTMLElement {
         '<ul>' +
         '<li>Для части <strong>a</strong> достаточно добавить в <code>Pointer</code> поддержку <code>[Symbol.dispose]()</code> и внутри вызвать уже существующий <code>free()</code>.</li>' +
         '<li>После этого heap-указатель из <code>mem.alloc(...)</code> можно использовать через <code>using</code>, а память будет освобождаться автоматически при выходе из области видимости.</li>' +
-        '<li>Внутренняя модель памяти не меняется: <code>free()</code> по-прежнему освобождает только heap-блоки, запрещает повторное освобождение и инвалидирует указатель.</li>' +
+        '<li>Внутренняя модель памяти не меняется: <code>free()</code> по-прежнему освобождает только heap-блоки, запрещает повторное освобождение, инвалидирует указатель и возвращает весь фактический блок памяти с учётом выравнивания.</li>' +
         '<li>Для части <strong>b</strong> добавлен <code>Rc</code> — обёртка над <code>Pointer</code> со счётчиком ссылок. Все клоны <code>Rc</code> разделяют общий <code>state</code>, внутри которого хранится <code>Pointer</code> и <code>count</code>.</li>' +
         '<li><code>clone()</code> увеличивает общий <code>count</code>, <code>[Symbol.dispose]()</code> уменьшает его, а память освобождается только тогда, когда уничтожен последний владелец и <code>count</code> стал равен <code>0</code>.</li>' +
         '</ul>';

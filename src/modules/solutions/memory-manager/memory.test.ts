@@ -64,6 +64,17 @@ test('push кладёт данные в стек и возвращает ука�
   assert.equal(memory.stackPointer, 3);
 });
 
+test('push выравнивает следующий стековый блок по границе 8 байт', () => {
+  const memory = createMemory(100, { stack: 24 });
+
+  const p1 = memory.push(new Uint8Array([1, 2, 3]).buffer);
+  const p2 = memory.push(new Uint8Array([4]).buffer);
+
+  assert.equal(p1.offset, 0);
+  assert.equal(p2.offset, 8);
+  assert.equal(memory.stackPointer, 9);
+});
+
 test('push выбрасывает ошибку при переполнении стека', () => {
   const memory = createMemory(100, { stack: 3 });
 
@@ -124,7 +135,7 @@ test('pop удаляет последний добавленный блок из
   memory.push(new Uint8Array([1, 2, 3]).buffer);
   memory.push(new Uint8Array([4, 5]).buffer);
 
-  assert.equal(memory.stackPointer, 5);
+  assert.equal(memory.stackPointer, 10);
 
   memory.pop();
 
@@ -145,7 +156,7 @@ test('pop удаляет последний добавленный блок из
   memory.push(new Uint8Array([1, 2, 3]).buffer);
   memory.push(new Uint8Array([4, 5]).buffer);
 
-  assert.equal(memory.stackPointer, 5);
+  assert.equal(memory.stackPointer, 10);
 
   memory.pop();
 
@@ -197,7 +208,7 @@ test('alloc выделяет блок в куче и возвращает ука
 
   const pointer = memory.alloc(5);
 
-  assert.equal(pointer.offset, 10);
+  assert.equal(pointer.offset, 16);
   assert.equal(pointer.size, 5);
   assert.deepEqual(bytes(pointer.deref()), [0, 0, 0, 0, 0]);
 });
@@ -208,9 +219,9 @@ test('alloc сдвигает указатель кучи после выделе
   const p1 = memory.alloc(5);
   const p2 = memory.alloc(3);
 
-  assert.equal(p1.offset, 10);
-  assert.equal(p2.offset, 15);
-  assert.equal(memory.heapPointer, 18);
+  assert.equal(p1.offset, 16);
+  assert.equal(p2.offset, 24);
+  assert.equal(memory.heapPointer, 27);
 });
 
 test('alloc выбрасывает ошибку при некорректном размере', () => {
@@ -241,7 +252,7 @@ test('change записывает данные в выделенный блок 
   pointer.change(new Uint8Array([7, 8, 9]).buffer);
 
   assert.deepEqual(bytes(pointer.deref()), [7, 8, 9]);
-  assert.deepEqual(bytes(memory.buffer).slice(10, 13), [7, 8, 9]);
+  assert.deepEqual(bytes(memory.buffer).slice(16, 19), [7, 8, 9]);
 });
 
 test('free выбрасывает ошибку для указателя из стека', () => {
@@ -312,7 +323,7 @@ test('free объединяет соседние свободные блоки �
 
   const p3 = memory.alloc(20);
 
-  assert.equal(p3.offset, 10);
+  assert.equal(p3.offset, 16);
   assert.equal(p3.size, 20);
 });
 
@@ -327,7 +338,7 @@ test('free объединяет соседние свободные блоки �
 
   const p3 = memory.alloc(20);
 
-  assert.equal(p3.offset, 10);
+  assert.equal(p3.offset, 16);
   assert.equal(p3.size, 20);
 });
 
@@ -342,7 +353,7 @@ test('free объединяет соседние блоки независимо
 
   const p3 = memory.alloc(20);
 
-  assert.equal(p3.offset, 10);
+  assert.equal(p3.offset, 16);
   assert.equal(p3.size, 20);
 });
 

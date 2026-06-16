@@ -2,12 +2,15 @@ export type MemoryRegion = 'stack' | 'heap';
 
 export interface MemoryOptions {
   stack: number;
+  alignment?: number;
 }
 
 interface MemoryBlock {
   offset: number;
   size: number;
 }
+
+const DEFAULT_ALIGNMENT = 8;
 
 export class Pointer {
   private readonly memory: Memory;
@@ -17,12 +20,23 @@ export class Pointer {
   readonly offset: number;
   readonly size: number;
   readonly region: MemoryRegion;
+  readonly blockOffset: number;
+  readonly blockSize: number;
 
-  constructor(memory: Memory, offset: number, size: number, region: MemoryRegion) {
+  constructor(
+    memory: Memory,
+    offset: number,
+    size: number,
+    region: MemoryRegion,
+    blockOffset: number = offset,
+    blockSize: number = size
+  ) {
     this.memory = memory;
     this.offset = offset;
     this.size = size;
     this.region = region;
+    this.blockOffset = blockOffset;
+    this.blockSize = blockSize;
   }
 
   deref(): ArrayBuffer {
@@ -66,7 +80,7 @@ export class Pointer {
       throw new Error('Обнаружено двойное освобождение');
     }
 
-    this.memory.releaseHeapBlock(this.offset, this.size);
+    this.memory.releaseHeapBlock(this.blockOffset, this.blockSize);
     this.invalidate();
   }
 }
@@ -78,16 +92,17 @@ export class Memory {
   readonly buffer: ArrayBuffer;
   readonly totalSize: number;
   readonly stackSize: number;
+  readonly alignment: number;
 
   stackPointer: number;
   heapPointer: number;
 
-  constructor(totalSize: number, { stack }: MemoryOptions) {
-    if (totalSize <= 0) {
+  constructor(totalSize: number, { stack, alignment = DEFAULT_ALIGNMENT }: MemoryOptions) {
+    if (!Number.isInteger(totalSize) || totalSize <= 0) {
       throw new Error('Некорректный размер общей памяти');
     }
 
-    if (stack <= 0) {
+    if (!Number.isInteger(stack) || stack <= 0) {
       throw new Error('Некорректный размер стека');
     }
 
@@ -95,29 +110,36 @@ export class Memory {
       throw new Error('Размер стека должен быть меньше общего размера памяти');
     }
 
+    if (!Number.isInteger(alignment) || alignment <= 0) {
+      throw new Error('Некорректное выравнивание памяти');
+    }
+
     this.totalSize = totalSize;
     this.stackSize = stack;
+    this.alignment = alignment;
     this.buffer = new ArrayBuffer(totalSize);
     this.stackPointer = 0;
     this.heapPointer = this.stackSize;
   }
 
   push(data: ArrayBuffer): Pointer {
-    const offset = this.stackPointer;
     const dataLength = data.byteLength;
+    const blockOffset = this.stackPointer;
+    const alignedOffset = this.align(this.stackPointer);
+    const blockSize = alignedOffset - blockOffset + dataLength;
 
-    if (offset + dataLength > this.stackSize) {
+    if (alignedOffset + dataLength > this.stackSize) {
       throw new Error('Стек заполнен');
     }
 
     const source = new Uint8Array(data);
-    const target = new Uint8Array(this.buffer, offset, dataLength);
+    const target = new Uint8Array(this.buffer, alignedOffset, dataLength);
 
     target.set(source);
 
-    this.stackPointer += dataLength;
+    this.stackPointer = blockOffset + blockSize;
 
-    const pointer = new Pointer(this, offset, dataLength, 'stack');
+    const pointer = new Pointer(this, alignedOffset, dataLength, 'stack', blockOffset, blockSize);
 
     this.stackPointers.push(pointer);
 
@@ -133,7 +155,7 @@ export class Memory {
 
     pointer.invalidate();
 
-    this.stackPointer = pointer.offset;
+    this.stackPointer = pointer.blockOffset;
   }
 
   alloc(size: number): Pointer {
@@ -141,31 +163,42 @@ export class Memory {
       throw new Error('Некорректное выделение памяти');
     }
 
-    const freeBlockIndex = this.freeHeapBlocks.findIndex((block) => block.size >= size);
+    const freeBlockIndex = this.freeHeapBlocks.findIndex((block) => {
+      const alignedOffset = this.align(block.offset);
+      const padding = alignedOffset - block.offset;
+
+      return block.size >= size + padding;
+    });
 
     if (freeBlockIndex !== -1) {
       const freeBlock = this.freeHeapBlocks[freeBlockIndex];
-      const { offset } = freeBlock;
+      const blockOffset = freeBlock.offset;
+      const alignedOffset = this.align(freeBlock.offset);
+      const blockSize = alignedOffset - blockOffset + size;
 
-      const pointer = new Pointer(this, offset, size, 'heap');
+      const pointer = new Pointer(this, alignedOffset, size, 'heap', blockOffset, blockSize);
 
-      if (freeBlock.size === size) {
+      if (freeBlock.size === blockSize) {
         this.freeHeapBlocks.splice(freeBlockIndex, 1);
       } else {
-        freeBlock.offset += size;
-        freeBlock.size -= size;
+        freeBlock.offset += blockSize;
+        freeBlock.size -= blockSize;
       }
 
       return pointer;
     }
 
-    if (this.heapPointer + size > this.totalSize) {
+    const blockOffset = this.heapPointer;
+    const alignedHeapPointer = this.align(this.heapPointer);
+    const blockSize = alignedHeapPointer - blockOffset + size;
+
+    if (alignedHeapPointer + size > this.totalSize) {
       throw new Error('Памяти не хватает');
     }
 
-    const pointer = new Pointer(this, this.heapPointer, size, 'heap');
+    const pointer = new Pointer(this, alignedHeapPointer, size, 'heap', blockOffset, blockSize);
 
-    this.heapPointer += size;
+    this.heapPointer = blockOffset + blockSize;
 
     return pointer;
   }
@@ -186,5 +219,15 @@ export class Memory {
         i--;
       }
     }
+  }
+
+  private align(offset: number): number {
+    const remainder = offset % this.alignment;
+
+    if (remainder === 0) {
+      return offset;
+    }
+
+    return offset + (this.alignment - remainder);
   }
 }
