@@ -224,7 +224,7 @@ export class AssignmentsPage extends HTMLElement {
         '<h3>TL;DR</h3>' +
         '<ul>' +
         '<li>Реализована матрица <code>Matrix&lt;T&gt;</code> с двумя режимами: <code>new Matrix(Uint8Array, rows, cols)</code> для typed arrays и <code>new Matrix(rows, cols, customElementView)</code> для собственного формата веса.</li>' +
-        '<li>Для custom view сам <code>ElementView</code> задаёт чтение, запись, значение отсутствующей связи и значение связи по умолчанию через <code>zero</code>, <code>one</code> и <code>isZero</code>.</li>' +
+        '<li>Для любого view сам <code>ElementView</code> задаёт чтение, запись, значение отсутствующей связи и значение связи по умолчанию через <code>zero</code>, <code>one</code> и <code>isZero</code>.</li>' +
         '<li><code>Graph&lt;T&gt;</code> работает поверх этой матрицы, поддерживает ориентированный и неориентированный режимы, а отсутствие связи определяется через семантику конкретного веса.</li>' +
         '<li>Для неориентированного графа <code>addEdge</code> и <code>removeEdge</code> работают симметрично в обе стороны, а <code>hasEdge</code> считает ребро существующим только если связь записана с обеих сторон.</li>' +
         '<li><code>traverse</code> реализован через BFS: уже посещённые вершины игнорируются, а callback получает <code>id</code>, <code>depth</code> и вес ребра, по которому был достигнут узел. Для стартовой вершины вес равен <code>undefined</code>.</li>' +
