@@ -100,25 +100,7 @@ export class Graph<T = number> {
         { directed: true },
       );
 
-      for (let from = 0; from < this.matrix.width; from += 1) {
-        closure.addArc(from, from, 1);
-
-        for (let to = 0; to < this.matrix.height; to += 1) {
-          if (this.hasArc(from, to)) {
-            closure.addArc(from, to, 1);
-          }
-        }
-      }
-
-      for (let through = 0; through < this.matrix.width; through += 1) {
-        for (let from = 0; from < this.matrix.width; from += 1) {
-          for (let to = 0; to < this.matrix.height; to += 1) {
-            if (closure.hasArc(from, through) && closure.hasArc(through, to)) {
-              closure.addArc(from, to, 1);
-            }
-          }
-        }
-      }
+      this.fillTransitiveClosure(closure, 1);
 
       return closure;
     }
@@ -128,12 +110,24 @@ export class Graph<T = number> {
       { directed: true },
     );
 
+    this.fillTransitiveClosure(closure, this.matrix.elementView.one);
+
+    return closure;
+  }
+
+  private assertNode(id: number): void {
+    if (!Number.isInteger(id) || id < 0 || id >= this.matrix.width) {
+      throw new RangeError('Некорректный индекс узла');
+    }
+  }
+
+  private fillTransitiveClosure<U>(closure: Graph<U>, one: U): void {
     for (let from = 0; from < this.matrix.width; from += 1) {
-      closure.addArc(from, from, this.matrix.elementView.one);
+      closure.addArc(from, from, one);
 
       for (let to = 0; to < this.matrix.height; to += 1) {
         if (this.hasArc(from, to)) {
-          closure.addArc(from, to, this.matrix.elementView.one);
+          closure.addArc(from, to, one);
         }
       }
     }
@@ -142,18 +136,10 @@ export class Graph<T = number> {
       for (let from = 0; from < this.matrix.width; from += 1) {
         for (let to = 0; to < this.matrix.height; to += 1) {
           if (closure.hasArc(from, through) && closure.hasArc(through, to)) {
-            closure.addArc(from, to, this.matrix.elementView.one);
+            closure.addArc(from, to, one);
           }
         }
       }
-    }
-
-    return closure;
-  }
-
-  private assertNode(id: number): void {
-    if (!Number.isInteger(id) || id < 0 || id >= this.matrix.width) {
-      throw new RangeError('Некорректный индекс узла');
     }
   }
 }

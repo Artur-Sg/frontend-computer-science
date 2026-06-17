@@ -128,21 +128,25 @@ export class Matrix<T = number> {
     second: number,
     third: number | ElementView<T>,
   ) {
-    const config = this.normalizeConstructorArgs(first, second, third);
+    const width = typeof first === 'number' ? first : second;
+    const height = typeof first === 'number' ? second : (third as number);
+    const elementView = typeof first === 'number'
+      ? (third as ElementView<T>)
+      : (createNumericElementView(first) as ElementView<T>);
 
-    if (!Number.isInteger(config.width) || config.width <= 0) {
+    if (!Number.isInteger(width) || width <= 0) {
       throw new RangeError('width должно быть больше нуля');
     }
 
-    if (!Number.isInteger(config.height) || config.height <= 0) {
+    if (!Number.isInteger(height) || height <= 0) {
       throw new RangeError('height должно быть больше нуля');
     }
 
-    this.width = config.width;
-    this.height = config.height;
-    this.elementView = config.elementView;
-    this.ArrayClass = config.ArrayClass;
-    this.buffer = new ArrayBuffer(config.width * config.height * config.elementView.bytesPerElement);
+    this.width = width;
+    this.height = height;
+    this.elementView = elementView;
+    this.ArrayClass = typeof first === 'number' ? undefined : first;
+    this.buffer = new ArrayBuffer(width * height * elementView.bytesPerElement);
     this.dataView = new DataView(this.buffer);
   }
 
@@ -162,32 +166,6 @@ export class Matrix<T = number> {
     ) {
       this.elementView.write(this.dataView, byteOffset, value);
     }
-  }
-
-  private normalizeConstructorArgs(
-    first: number | ArrayConstructor<ArrayTypes>,
-    second: number,
-    third: number | ElementView<T>,
-  ): {
-    width: number;
-    height: number;
-    elementView: ElementView<T>;
-    ArrayClass?: ArrayConstructor<ArrayTypes>;
-  } {
-    if (typeof first === 'number') {
-      return {
-        width: first,
-        height: second,
-        elementView: third as ElementView<T>,
-      };
-    }
-
-    return {
-      width: second,
-      height: third as number,
-      elementView: createNumericElementView(first) as ElementView<T>,
-      ArrayClass: first,
-    };
   }
 
   private getIndex(row: number, col: number): number {
