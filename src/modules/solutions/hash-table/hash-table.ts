@@ -31,32 +31,26 @@ type HashableObject = object & {
   [OBJECT_HASH]?: number;
 };
 
+type HashCodeProvider = object & {
+  hashCode?: () => unknown;
+};
+
+export interface DefaultHashStrategyOptions {
+  objectHashFactory?: () => number;
+}
+
 export class DefaultHashStrategy implements HashStrategy<unknown> {
-  private nextObjectHash = 1;
+  private readonly objectHashFactory: () => number;
+
+  constructor(options: DefaultHashStrategyOptions = {}) {
+    this.objectHashFactory = options.objectHashFactory ?? (() => this.createRandomHash());
+  }
 
   public hash(key: unknown): number {
-    if (key === null) {
-      return this.hashString('null:null');
-    }
+    const primitiveKey = this.toTypedKeyString(key);
 
-    if (typeof key === 'number') {
-      return this.hashString(`number:${key}`);
-    }
-
-    if (typeof key === 'string') {
-      return this.hashString(`string:${key}`);
-    }
-
-    if (typeof key === 'boolean') {
-      return this.hashString(`boolean:${key}`);
-    }
-
-    if (typeof key === 'symbol') {
-      return this.hashString(`symbol:${String(key)}`);
-    }
-
-    if (typeof key === 'bigint') {
-      return this.hashString(`bigint:${key.toString()}`);
+    if (primitiveKey !== null) {
+      return this.hashString(primitiveKey);
     }
 
     if ((typeof key === 'object' && key !== null) || typeof key === 'function') {
@@ -71,6 +65,13 @@ export class DefaultHashStrategy implements HashStrategy<unknown> {
   }
 
   private hashObject(key: object): number {
+    const hashCodeOwner = key as HashCodeProvider;
+    const { hashCode } = hashCodeOwner;
+
+    if (typeof hashCode === 'function') {
+      return this.hashHashCodeResult(hashCode.call(key));
+    }
+
     const hashable = key as HashableObject;
     const existingHash = hashable[OBJECT_HASH];
 
@@ -82,9 +83,7 @@ export class DefaultHashStrategy implements HashStrategy<unknown> {
       throw new Error('Нельзя добавить hash к нерасширяемому объекту');
     }
 
-    const hash = this.nextObjectHash;
-
-    this.nextObjectHash += 1;
+    const hash = this.normalizeHash(this.objectHashFactory());
 
     Object.defineProperty(key, OBJECT_HASH, {
       value: hash,
@@ -98,6 +97,56 @@ export class DefaultHashStrategy implements HashStrategy<unknown> {
 
   private hashString(value: string): number {
     return hashString(value);
+  }
+
+  private hashHashCodeResult(value: unknown): number {
+    const primitiveKey = this.toTypedKeyString(value);
+
+    if (primitiveKey !== null) {
+      return this.hashString(`hashCode:${primitiveKey}`);
+    }
+
+    return this.hashString(`hashCode:fallback:${String(value)}`);
+  }
+
+  private normalizeHash(value: number): number {
+    return Math.floor(value) >>> 0;
+  }
+
+  private createRandomHash(): number {
+    return Math.floor(Math.random() * 0x1_0000_0000);
+  }
+
+  private toTypedKeyString(value: unknown): string | null {
+    if (value === null) {
+      return 'null:null';
+    }
+
+    if (typeof value === 'undefined') {
+      return 'undefined:undefined';
+    }
+
+    if (typeof value === 'number') {
+      return `number:${value}`;
+    }
+
+    if (typeof value === 'string') {
+      return `string:${value}`;
+    }
+
+    if (typeof value === 'boolean') {
+      return `boolean:${value}`;
+    }
+
+    if (typeof value === 'symbol') {
+      return `symbol:${String(value)}`;
+    }
+
+    if (typeof value === 'bigint') {
+      return `bigint:${value.toString()}`;
+    }
+
+    return null;
   }
 }
 
@@ -114,6 +163,14 @@ export class HashMap<K, V> {
     loadFactor = 0.65,
     hasher: HashStrategy<K> = new DefaultHashStrategy() as HashStrategy<K>
   ) {
+    if (!Number.isInteger(capacity) || capacity <= 0) {
+      throw new Error('Некорректная емкость таблицы');
+    }
+
+    if (loadFactor <= 0) {
+      throw new Error('Некорректный load factor');
+    }
+
     this.hasher = hasher;
     this.capacity = capacity;
     this.buckets = Array.from({ length: capacity }, () => null);
@@ -143,7 +200,7 @@ export class HashMap<K, V> {
       next: this.buckets[index]
     };
     this.size += 1;
-    this.resize();
+    this.resizeIfNeeded();
   }
 
   public has(key: K): boolean {
@@ -186,7 +243,7 @@ export class HashMap<K, V> {
     return ((hash % this.capacity) + this.capacity) % this.capacity;
   }
 
-  private resize(): void {
+  private resizeIfNeeded(): void {
     const currentLoadFactor = this.size / this.capacity;
 
     if (currentLoadFactor <= this.loadFactor) {

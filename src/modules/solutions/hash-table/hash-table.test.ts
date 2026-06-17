@@ -1,6 +1,6 @@
 import { strict as assert } from 'node:assert';
 
-import { HashMap, HashStrategy } from './hash-table';
+import { DefaultHashStrategy, HashMap, HashStrategy } from './hash-table';
 
 function test(name: string, fn: () => void): void {
   try {
@@ -33,6 +33,11 @@ test('конструктор принимает кастомную страте�
   table.set('foo', 1);
 
   assert.equal(table.get('foo'), 1);
+});
+
+test('конструктор валидирует capacity и loadFactor', () => {
+  assert.throws(() => new HashMap(0), /Некорректная емкость таблицы/);
+  assert.throws(() => new HashMap(8, 0), /Некорректный load factor/);
 });
 
 test('set/get работают со строковым ключом', () => {
@@ -76,6 +81,16 @@ test('set/get работают с null как с примитивным ключ
   assert.equal(table.size, 1);
 });
 
+test('set/get работают с undefined как с примитивным ключом', () => {
+  const table = createMap();
+
+  table.set(undefined, 456);
+
+  assert.equal(table.get(undefined), 456);
+  assert.equal(table.has(undefined), true);
+  assert.equal(table.size, 1);
+});
+
 test('одна таблица поддерживает одновременно строки, числа и объекты', () => {
   const table = createMap();
   const key = { id: 1 };
@@ -101,6 +116,41 @@ test('разные объекты с одинаковым содержимым �
   assert.equal(table.get(key1), 100);
   assert.equal(table.get(key2), 200);
   assert.equal(table.size, 2);
+});
+
+test('если у объекта есть hashCode, стратегия использует его', () => {
+  const table = createMap();
+  const key1 = {
+    id: 1,
+    hashCode() {
+      return 'user:1';
+    }
+  };
+  const key2 = {
+    id: 1,
+    hashCode() {
+      return 'user:1';
+    }
+  };
+
+  table.set(key1, 100);
+  table.set(key2, 200);
+
+  assert.equal(table.get(key1), 100);
+  assert.equal(table.get(key2), 200);
+  assert.equal(table.size, 2);
+});
+
+test('DefaultHashStrategy позволяет подменить генератор object hash', () => {
+  const strategy = new DefaultHashStrategy({
+    objectHashFactory: () => 123456
+  });
+  const table = new HashMap<object, number>(8, 0.65, strategy);
+  const key = { id: 1 };
+
+  table.set(key, 100);
+
+  assert.equal(table.get(key), 100);
 });
 
 test('нерасширяемый объект выбрасывает понятную ошибку', () => {
