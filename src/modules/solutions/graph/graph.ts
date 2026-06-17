@@ -4,31 +4,34 @@ export interface GraphOptions {
   directed?: boolean;
 }
 
-export interface TraversedNode<T = number> {
+export interface TraversedNode<T> {
   id: number;
-  weight: T;
+  weight: T | undefined;
 }
 
 export class Graph<T = number> {
   readonly matrix: Matrix<T>;
-
   readonly directed: boolean;
 
   constructor(matrix: Matrix<T>, options: GraphOptions = {}) {
+    if (matrix.width !== matrix.height) {
+      throw new Error('Матрица смежности должна быть квадратной');
+    }
+
     this.matrix = matrix;
     this.directed = options.directed ?? false;
   }
 
   hasArc(from: number, to: number): boolean {
-    return this.matrix.get(from, to) !== 0;
+    return !this.matrix.elementView.isZero(this.matrix.get(from, to));
   }
 
-  addArc(from: number, to: number, weight: T = 1 as T): void {
+  addArc(from: number, to: number, weight: T = this.matrix.elementView.one): void {
     this.matrix.set(from, to, weight);
   }
 
   removeArc(from: number, to: number): void {
-    this.matrix.set(from, to, 0 as T);
+    this.matrix.set(from, to, this.matrix.elementView.zero);
   }
 
   hasEdge(from: number, to: number): boolean {
@@ -36,102 +39,121 @@ export class Graph<T = number> {
       return this.hasArc(from, to);
     }
 
-    return this.hasArc(from, to) || this.hasArc(to, from);
+    return this.hasArc(from, to) && this.hasArc(to, from);
   }
 
-  addEdge(from: number, to: number, weight: T = 1 as T): void {
-    this.addArc(from, to, weight);
+  addEdge(from: number, to: number, weight: T = this.matrix.elementView.one): void {
+    this.matrix.set(from, to, weight);
 
     if (!this.directed) {
-      this.addArc(to, from, weight);
+      this.matrix.set(to, from, weight);
     }
   }
 
   removeEdge(from: number, to: number): void {
-    this.removeArc(from, to);
+    this.matrix.set(from, to, this.matrix.elementView.zero);
 
     if (!this.directed) {
-      this.removeArc(to, from);
+      this.matrix.set(to, from, this.matrix.elementView.zero);
     }
   }
 
   traverse(start: number, callback: (node: TraversedNode<T>, depth: number) => void): void {
-    this.matrix.get(start, start);
+    this.assertNode(start);
 
     const visited = new Set<number>();
-
-    const queue: Array<{
-      id: number;
-      depth: number;
-      weight: T;
-    }> = [
-      {
-        id: start,
-        depth: 0,
-        weight: 0 as T,
-      },
+    const queue: Array<TraversedNode<T> & { depth: number }> = [
+      { id: start, weight: undefined, depth: 0 },
     ];
+    let head = 0;
 
-    while (queue.length > 0) {
-      const current = queue.shift()!;
+    while (head < queue.length) {
+      const current = queue[head];
+
+      head += 1;
 
       if (visited.has(current.id)) {
         continue;
       }
 
       visited.add(current.id);
+      callback({ id: current.id, weight: current.weight }, current.depth);
 
-      callback(
-        {
-          id: current.id,
-          weight: current.weight,
-        },
-        current.depth
-      );
+      for (let neighbor = 0; neighbor < this.matrix.width; neighbor += 1) {
+        const edgeWeight = this.matrix.get(current.id, neighbor);
 
-      for (let to = 0; to < this.matrix.cols; to++) {
-        const weight = this.matrix.get(current.id, to);
-
-        if (weight !== 0 && !visited.has(to)) {
+        if (!this.matrix.elementView.isZero(edgeWeight) && !visited.has(neighbor)) {
           queue.push({
-            id: to,
+            id: neighbor,
+            weight: edgeWeight,
             depth: current.depth + 1,
-            weight,
           });
         }
       }
     }
   }
 
-  transitiveClosure(): Graph<T> {
-    const closureMatrix = new Matrix<T>(
-      this.matrix.rows,
-      this.matrix.cols,
-      this.matrix.elementView
+  transitiveClosure(): Graph<number> | Graph<T> {
+    if (this.matrix.ArrayClass) {
+      const closure = new Graph<number>(
+        new Matrix(Uint8Array, this.matrix.width, this.matrix.height),
+        { directed: true },
+      );
+
+      for (let from = 0; from < this.matrix.width; from += 1) {
+        closure.addArc(from, from, 1);
+
+        for (let to = 0; to < this.matrix.height; to += 1) {
+          if (this.hasArc(from, to)) {
+            closure.addArc(from, to, 1);
+          }
+        }
+      }
+
+      for (let through = 0; through < this.matrix.width; through += 1) {
+        for (let from = 0; from < this.matrix.width; from += 1) {
+          for (let to = 0; to < this.matrix.height; to += 1) {
+            if (closure.hasArc(from, through) && closure.hasArc(through, to)) {
+              closure.addArc(from, to, 1);
+            }
+          }
+        }
+      }
+
+      return closure;
+    }
+
+    const closure = new Graph<T>(
+      new Matrix(this.matrix.width, this.matrix.height, this.matrix.elementView),
+      { directed: true },
     );
 
-    const closure = new Graph<T>(closureMatrix, {
-      directed: true,
-    });
+    for (let from = 0; from < this.matrix.width; from += 1) {
+      closure.addArc(from, from, this.matrix.elementView.one);
 
-    for (let from = 0; from < this.matrix.rows; from++) {
-      for (let to = 0; to < this.matrix.cols; to++) {
-        if (this.matrix.get(from, to) !== 0) {
-          closure.addArc(from, to, 1 as T);
+      for (let to = 0; to < this.matrix.height; to += 1) {
+        if (this.hasArc(from, to)) {
+          closure.addArc(from, to, this.matrix.elementView.one);
         }
       }
     }
 
-    for (let through = 0; through < this.matrix.rows; through++) {
-      for (let from = 0; from < this.matrix.rows; from++) {
-        for (let to = 0; to < this.matrix.cols; to++) {
+    for (let through = 0; through < this.matrix.width; through += 1) {
+      for (let from = 0; from < this.matrix.width; from += 1) {
+        for (let to = 0; to < this.matrix.height; to += 1) {
           if (closure.hasArc(from, through) && closure.hasArc(through, to)) {
-            closure.addArc(from, to, 1 as T);
+            closure.addArc(from, to, this.matrix.elementView.one);
           }
         }
       }
     }
 
     return closure;
+  }
+
+  private assertNode(id: number): void {
+    if (!Number.isInteger(id) || id < 0 || id >= this.matrix.width) {
+      throw new RangeError('Некорректный индекс узла');
+    }
   }
 }

@@ -1,134 +1,212 @@
 export interface ElementView<T> {
   name: string;
   bytesPerElement: number;
+  zero: T;
+  one: T;
 
   read(view: DataView, byteOffset: number): T;
   write(view: DataView, byteOffset: number, value: T): void;
-
-  view?(view: DataView, byteOffset: number): T;
+  isZero(value: T): boolean;
 }
 
-type Source = ArrayBuffer | ArrayBufferView;
+export type ArrayTypes =
+  | Uint8Array
+  | Uint8ClampedArray
+  | Int8Array
+  | Uint16Array
+  | Int16Array
+  | Uint32Array
+  | Int32Array
+  | Float32Array
+  | Float64Array
+  | BigUint64Array
+  | BigInt64Array;
+
+export type ArrayConstructor<T extends ArrayTypes = ArrayTypes> = new (capacity: number) => T;
+
+export type ArrayValue<T extends ArrayTypes> = T extends BigUint64Array | BigInt64Array
+  ? bigint
+  : number;
+
+type NumericMatrixValue = number | bigint;
+
+function createElementView<T>(
+  name: string,
+  bytesPerElement: number,
+  zero: T,
+  one: T,
+  read: (view: DataView, byteOffset: number) => T,
+  write: (view: DataView, byteOffset: number, value: T) => void,
+): ElementView<T> {
+  return {
+    name,
+    bytesPerElement,
+    zero,
+    one,
+    read,
+    write,
+    isZero: (value) => value === zero,
+  };
+}
+
+function createNumericElementView(ArrayClass: ArrayConstructor<ArrayTypes>): ElementView<NumericMatrixValue> {
+  switch (ArrayClass) {
+    case Uint8Array:
+      return createElementView('Uint8Array', Uint8Array.BYTES_PER_ELEMENT, 0, 1,
+        (view, byteOffset) => view.getUint8(byteOffset),
+        (view, byteOffset, value) => view.setUint8(byteOffset, value),
+      );
+    case Uint8ClampedArray:
+      return createElementView('Uint8ClampedArray', Uint8ClampedArray.BYTES_PER_ELEMENT, 0, 1,
+        (view, byteOffset) => view.getUint8(byteOffset),
+        (view, byteOffset, value) => {
+          const clampedValue = Math.max(0, Math.min(255, Math.round(value as number)));
+
+          view.setUint8(byteOffset, clampedValue);
+        },
+      );
+    case Int8Array:
+      return createElementView('Int8Array', Int8Array.BYTES_PER_ELEMENT, 0, 1,
+        (view, byteOffset) => view.getInt8(byteOffset),
+        (view, byteOffset, value) => view.setInt8(byteOffset, value),
+      );
+    case Uint16Array:
+      return createElementView('Uint16Array', Uint16Array.BYTES_PER_ELEMENT, 0, 1,
+        (view, byteOffset) => view.getUint16(byteOffset, true),
+        (view, byteOffset, value) => view.setUint16(byteOffset, value, true),
+      );
+    case Int16Array:
+      return createElementView('Int16Array', Int16Array.BYTES_PER_ELEMENT, 0, 1,
+        (view, byteOffset) => view.getInt16(byteOffset, true),
+        (view, byteOffset, value) => view.setInt16(byteOffset, value, true),
+      );
+    case Uint32Array:
+      return createElementView('Uint32Array', Uint32Array.BYTES_PER_ELEMENT, 0, 1,
+        (view, byteOffset) => view.getUint32(byteOffset, true),
+        (view, byteOffset, value) => view.setUint32(byteOffset, value, true),
+      );
+    case Int32Array:
+      return createElementView('Int32Array', Int32Array.BYTES_PER_ELEMENT, 0, 1,
+        (view, byteOffset) => view.getInt32(byteOffset, true),
+        (view, byteOffset, value) => view.setInt32(byteOffset, value, true),
+      );
+    case Float32Array:
+      return createElementView('Float32Array', Float32Array.BYTES_PER_ELEMENT, 0, 1,
+        (view, byteOffset) => view.getFloat32(byteOffset, true),
+        (view, byteOffset, value) => view.setFloat32(byteOffset, value, true),
+      );
+    case Float64Array:
+      return createElementView('Float64Array', Float64Array.BYTES_PER_ELEMENT, 0, 1,
+        (view, byteOffset) => view.getFloat64(byteOffset, true),
+        (view, byteOffset, value) => view.setFloat64(byteOffset, value, true),
+      );
+    case BigUint64Array:
+      return createElementView('BigUint64Array', BigUint64Array.BYTES_PER_ELEMENT, 0n, 1n,
+        (view, byteOffset) => view.getBigUint64(byteOffset, true),
+        (view, byteOffset, value) => view.setBigUint64(byteOffset, value, true),
+      );
+    case BigInt64Array:
+      return createElementView('BigInt64Array', BigInt64Array.BYTES_PER_ELEMENT, 0n, 1n,
+        (view, byteOffset) => view.getBigInt64(byteOffset, true),
+        (view, byteOffset, value) => view.setBigInt64(byteOffset, value, true),
+      );
+    default:
+      throw new TypeError('Unsupported typed array constructor');
+  }
+}
 
 export class Matrix<T = number> {
-  readonly rows: number;
-
-  readonly cols: number;
-
+  readonly width: number;
+  readonly height: number;
   readonly elementView: ElementView<T>;
-
+  readonly ArrayClass?: ArrayConstructor<ArrayTypes>;
   readonly buffer: ArrayBuffer;
-
-  readonly byteOffset: number;
-
-  readonly byteLength: number;
 
   private readonly dataView: DataView;
 
+  constructor(ArrayClass: ArrayConstructor<ArrayTypes>, width: number, height: number);
+  constructor(width: number, height: number, elementView: ElementView<T>);
   constructor(
-    rows: number,
-    cols: number,
-    elementView: ElementView<T>,
-    source?: Source,
+    first: number | ArrayConstructor<ArrayTypes>,
+    second: number,
+    third: number | ElementView<T>,
   ) {
-    this.assertSize(rows, 'rows');
-    this.assertSize(cols, 'cols');
+    const config = this.normalizeConstructorArgs(first, second, third);
 
-    this.rows = rows;
-    this.cols = cols;
-    this.elementView = elementView;
-
-    const requiredByteLength = rows * cols * elementView.bytesPerElement;
-
-    if (source === undefined) {
-      this.buffer = new ArrayBuffer(requiredByteLength);
-      this.byteOffset = 0;
-      this.byteLength = requiredByteLength;
-    } else if (source instanceof ArrayBuffer) {
-      if (source.byteLength < requiredByteLength) {
-        throw new RangeError('Source buffer is too small');
-      }
-
-      this.buffer = source;
-      this.byteOffset = 0;
-      this.byteLength = requiredByteLength;
-    } else {
-      if (source.byteLength < requiredByteLength) {
-        throw new RangeError('Source view is too small');
-      }
-
-      this.buffer = source.buffer as ArrayBuffer;
-      this.byteOffset = source.byteOffset;
-      this.byteLength = requiredByteLength;
+    if (!Number.isInteger(config.width) || config.width <= 0) {
+      throw new RangeError('width должно быть больше нуля');
     }
 
-    this.dataView = new DataView(this.buffer, this.byteOffset, this.byteLength);
+    if (!Number.isInteger(config.height) || config.height <= 0) {
+      throw new RangeError('height должно быть больше нуля');
+    }
+
+    this.width = config.width;
+    this.height = config.height;
+    this.elementView = config.elementView;
+    this.ArrayClass = config.ArrayClass;
+    this.buffer = new ArrayBuffer(config.width * config.height * config.elementView.bytesPerElement);
+    this.dataView = new DataView(this.buffer);
   }
 
   get(row: number, col: number): T {
-    const byteOffset = this.getByteOffset(row, col);
-
-    return this.elementView.read(this.dataView, byteOffset);
+    return this.elementView.read(this.dataView, this.getByteOffset(row, col));
   }
 
   set(row: number, col: number, value: T): void {
-    const byteOffset = this.getByteOffset(row, col);
-
-    this.elementView.write(this.dataView, byteOffset, value);
+    this.elementView.write(this.dataView, this.getByteOffset(row, col), value);
   }
 
   fill(value: T): void {
-    const { bytesPerElement } = this.elementView;
-
     for (
       let byteOffset = 0;
-      byteOffset < this.byteLength;
-      byteOffset += bytesPerElement
+      byteOffset < this.buffer.byteLength;
+      byteOffset += this.elementView.bytesPerElement
     ) {
       this.elementView.write(this.dataView, byteOffset, value);
     }
   }
 
-  view(row: number, col: number): T {
-    if (!this.elementView.view) {
-      throw new Error('ElementView не поддерживает покомпонентный доступ');
+  private normalizeConstructorArgs(
+    first: number | ArrayConstructor<ArrayTypes>,
+    second: number,
+    third: number | ElementView<T>,
+  ): {
+    width: number;
+    height: number;
+    elementView: ElementView<T>;
+    ArrayClass?: ArrayConstructor<ArrayTypes>;
+  } {
+    if (typeof first === 'number') {
+      return {
+        width: first,
+        height: second,
+        elementView: third as ElementView<T>,
+      };
     }
 
-    const byteOffset = this.getByteOffset(row, col);
-
-    return this.elementView.view(this.dataView, byteOffset);
+    return {
+      width: second,
+      height: third as number,
+      elementView: createNumericElementView(first) as ElementView<T>,
+      ArrayClass: first,
+    };
   }
 
   private getIndex(row: number, col: number): number {
-    return row * this.cols + col;
+    this.assertIndex(row, this.height);
+    this.assertIndex(col, this.width);
+
+    return row * this.width + col;
   }
 
   private getByteOffset(row: number, col: number): number {
-    const normalizedRow = this.normalizeIndex(row, this.rows);
-    const normalizedCol = this.normalizeIndex(col, this.cols);
-
-    const index = this.getIndex(normalizedRow, normalizedCol);
-
-    return index * this.elementView.bytesPerElement;
+    return this.getIndex(row, col) * this.elementView.bytesPerElement;
   }
 
-  private normalizeIndex(index: number, size: number): number {
-    if (!Number.isInteger(index)) {
-      throw new RangeError('Index must be an integer');
-    }
-
-    const normalized = index < 0 ? size + index : index;
-
-    if (normalized < 0 || normalized >= size) {
+  private assertIndex(index: number, size: number): void {
+    if (!Number.isInteger(index) || index < 0 || index >= size) {
       throw new RangeError('Index is out of bounds');
-    }
-
-    return normalized;
-  }
-
-  private assertSize(value: number, name: string): void {
-    if (!Number.isInteger(value) || value <= 0) {
-      throw new RangeError(`${name} должно быть больше нуля`);
     }
   }
 }
