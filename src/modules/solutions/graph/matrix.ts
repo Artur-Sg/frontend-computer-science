@@ -1,5 +1,4 @@
 export interface ElementView<T> {
-  name: string;
   bytesPerElement: number;
   zero: T;
   one: T;
@@ -31,7 +30,6 @@ export type ArrayValue<T extends ArrayTypes> = T extends BigUint64Array | BigInt
 type NumericMatrixValue = number | bigint;
 
 function createElementView<T>(
-  name: string,
   bytesPerElement: number,
   zero: T,
   one: T,
@@ -39,7 +37,6 @@ function createElementView<T>(
   write: (view: DataView, byteOffset: number, value: T) => void,
 ): ElementView<T> {
   return {
-    name,
     bytesPerElement,
     zero,
     one,
@@ -52,12 +49,12 @@ function createElementView<T>(
 function createNumericElementView(ArrayClass: ArrayConstructor<ArrayTypes>): ElementView<NumericMatrixValue> {
   switch (ArrayClass) {
     case Uint8Array:
-      return createElementView('Uint8Array', Uint8Array.BYTES_PER_ELEMENT, 0, 1,
+      return createElementView(Uint8Array.BYTES_PER_ELEMENT, 0, 1,
         (view, byteOffset) => view.getUint8(byteOffset),
         (view, byteOffset, value) => view.setUint8(byteOffset, value),
       );
     case Uint8ClampedArray:
-      return createElementView('Uint8ClampedArray', Uint8ClampedArray.BYTES_PER_ELEMENT, 0, 1,
+      return createElementView(Uint8ClampedArray.BYTES_PER_ELEMENT, 0, 1,
         (view, byteOffset) => view.getUint8(byteOffset),
         (view, byteOffset, value) => {
           const clampedValue = Math.max(0, Math.min(255, Math.round(value as number)));
@@ -66,47 +63,47 @@ function createNumericElementView(ArrayClass: ArrayConstructor<ArrayTypes>): Ele
         },
       );
     case Int8Array:
-      return createElementView('Int8Array', Int8Array.BYTES_PER_ELEMENT, 0, 1,
+      return createElementView(Int8Array.BYTES_PER_ELEMENT, 0, 1,
         (view, byteOffset) => view.getInt8(byteOffset),
         (view, byteOffset, value) => view.setInt8(byteOffset, value),
       );
     case Uint16Array:
-      return createElementView('Uint16Array', Uint16Array.BYTES_PER_ELEMENT, 0, 1,
+      return createElementView(Uint16Array.BYTES_PER_ELEMENT, 0, 1,
         (view, byteOffset) => view.getUint16(byteOffset, true),
         (view, byteOffset, value) => view.setUint16(byteOffset, value, true),
       );
     case Int16Array:
-      return createElementView('Int16Array', Int16Array.BYTES_PER_ELEMENT, 0, 1,
+      return createElementView(Int16Array.BYTES_PER_ELEMENT, 0, 1,
         (view, byteOffset) => view.getInt16(byteOffset, true),
         (view, byteOffset, value) => view.setInt16(byteOffset, value, true),
       );
     case Uint32Array:
-      return createElementView('Uint32Array', Uint32Array.BYTES_PER_ELEMENT, 0, 1,
+      return createElementView(Uint32Array.BYTES_PER_ELEMENT, 0, 1,
         (view, byteOffset) => view.getUint32(byteOffset, true),
         (view, byteOffset, value) => view.setUint32(byteOffset, value, true),
       );
     case Int32Array:
-      return createElementView('Int32Array', Int32Array.BYTES_PER_ELEMENT, 0, 1,
+      return createElementView(Int32Array.BYTES_PER_ELEMENT, 0, 1,
         (view, byteOffset) => view.getInt32(byteOffset, true),
         (view, byteOffset, value) => view.setInt32(byteOffset, value, true),
       );
     case Float32Array:
-      return createElementView('Float32Array', Float32Array.BYTES_PER_ELEMENT, 0, 1,
+      return createElementView(Float32Array.BYTES_PER_ELEMENT, 0, 1,
         (view, byteOffset) => view.getFloat32(byteOffset, true),
         (view, byteOffset, value) => view.setFloat32(byteOffset, value, true),
       );
     case Float64Array:
-      return createElementView('Float64Array', Float64Array.BYTES_PER_ELEMENT, 0, 1,
+      return createElementView(Float64Array.BYTES_PER_ELEMENT, 0, 1,
         (view, byteOffset) => view.getFloat64(byteOffset, true),
         (view, byteOffset, value) => view.setFloat64(byteOffset, value, true),
       );
     case BigUint64Array:
-      return createElementView('BigUint64Array', BigUint64Array.BYTES_PER_ELEMENT, 0n, 1n,
+      return createElementView(BigUint64Array.BYTES_PER_ELEMENT, 0n, 1n,
         (view, byteOffset) => view.getBigUint64(byteOffset, true),
         (view, byteOffset, value) => view.setBigUint64(byteOffset, value, true),
       );
     case BigInt64Array:
-      return createElementView('BigInt64Array', BigInt64Array.BYTES_PER_ELEMENT, 0n, 1n,
+      return createElementView(BigInt64Array.BYTES_PER_ELEMENT, 0n, 1n,
         (view, byteOffset) => view.getBigInt64(byteOffset, true),
         (view, byteOffset, value) => view.setBigInt64(byteOffset, value, true),
       );

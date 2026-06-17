@@ -17,7 +17,6 @@ function createMatrix(size: number): Matrix {
 }
 
 const PairView: ElementView<readonly [number, number]> = {
-  name: 'PairView',
   bytesPerElement: 2,
   zero: [0, 0],
   one: [1, 0],
