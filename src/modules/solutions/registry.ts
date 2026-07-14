@@ -18,7 +18,8 @@ export type SolutionKey =
   | 'os-memory'
   | 'hash-table'
   | 'sorting-search'
-  | 'graph';
+  | 'graph'
+  | 'regular-expressions';
 
 export const solutionLoaders: Record<SolutionKey, () => Promise<SolutionModule>> = {
   encoding: () => import('./encoding/solution'),
@@ -35,5 +36,6 @@ export const solutionLoaders: Record<SolutionKey, () => Promise<SolutionModule>>
   'os-memory': () => import('./os-memory/solution'),
   'hash-table': () => import('./hash-table/solution'),
   'sorting-search': () => import('./sorting-search/solution'),
-  'graph': () => import('./graph/solution')
+  'graph': () => import('./graph/solution'),
+  'regular-expressions': () => import('./regular-expressions/solution')
 };
