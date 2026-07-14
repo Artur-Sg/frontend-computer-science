@@ -29,6 +29,7 @@
     "test:15-graph": "tsx src/modules/solutions/graph/matrix-graph.test.ts",
     "test:20-regular-expressions": "tsx src/modules/solutions/regular-expressions/regular-expressions.test.ts",
     "test:21-advanced-regular-expressions": "tsx src/modules/solutions/advanced-regular-expressions/advanced-regular-expressions.test.ts",
+    "test:22-lookahead-lookbehind-regex": "tsx src/modules/solutions/lookahead-lookbehind-regex/lookahead-lookbehind-regex.test.ts",
     "bench:05-pixel-stream": "tsx src/modules/solutions/pixel-stream/benchmark.ts",
     "bench:05-pixel-stream:jitless": "node --jitless ./node_modules/.bin/tsx src/modules/solutions/pixel-stream/benchmark.ts",
     "bench:06-arrays": "tsx src/modules/solutions/arrays/benchmark.ts",

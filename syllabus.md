@@ -87,6 +87,10 @@
    - ДЗ: `lectures/21-advanced-regex/homework/homework.md`
    - Решение: `lectures/21-advanced-regex/homework/solution.md`
 22. Продвинутые регулярные выражения. Ретроспективные и опережающие проверки.
+   - Теория: `lectures/22-lookahead-lookbehind-regex/theory.md`
+   - Практика: `lectures/22-lookahead-lookbehind-regex/practice.md`
+   - ДЗ: `lectures/22-lookahead-lookbehind-regex/homework/homework.md`
+   - Решение: `lectures/22-lookahead-lookbehind-regex/homework/solution.md`
 23. Паттерн "Итератор". Итерируемые объекты. Рекурсивные итераторы. Ленивые вычисления.
 24. Продвинутые итераторы. Продьюсеры, адаптеры, агрегаторы и коллекторы.
 25. Автоматы и генераторы. Поточная обработка данных.

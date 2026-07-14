@@ -20,7 +20,8 @@ export type SolutionKey =
   | 'sorting-search'
   | 'graph'
   | 'regular-expressions'
-  | 'advanced-regular-expressions';
+  | 'advanced-regular-expressions'
+  | 'lookahead-lookbehind-regex';
 
 export const solutionLoaders: Record<SolutionKey, () => Promise<SolutionModule>> = {
   encoding: () => import('./encoding/solution'),
@@ -39,5 +40,6 @@ export const solutionLoaders: Record<SolutionKey, () => Promise<SolutionModule>>
   'sorting-search': () => import('./sorting-search/solution'),
   'graph': () => import('./graph/solution'),
   'regular-expressions': () => import('./regular-expressions/solution'),
-  'advanced-regular-expressions': () => import('./advanced-regular-expressions/solution')
+  'advanced-regular-expressions': () => import('./advanced-regular-expressions/solution'),
+  'lookahead-lookbehind-regex': () => import('./lookahead-lookbehind-regex/solution')
 };
