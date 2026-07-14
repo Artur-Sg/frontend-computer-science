@@ -82,6 +82,10 @@
    - ДЗ: `lectures/20-grammars-regex/homework/homework.md`
    - Решение: `lectures/20-grammars-regex/homework/solution.md`
 21. Продвинутые регулярные выражения. Группы. Квантификаторы. Жадный и нежадный поиск.
+   - Теория: `lectures/21-advanced-regex/theory.md`
+   - Практика: `lectures/21-advanced-regex/practice.md`
+   - ДЗ: `lectures/21-advanced-regex/homework/homework.md`
+   - Решение: `lectures/21-advanced-regex/homework/solution.md`
 22. Продвинутые регулярные выражения. Ретроспективные и опережающие проверки.
 23. Паттерн "Итератор". Итерируемые объекты. Рекурсивные итераторы. Ленивые вычисления.
 24. Продвинутые итераторы. Продьюсеры, адаптеры, агрегаторы и коллекторы.

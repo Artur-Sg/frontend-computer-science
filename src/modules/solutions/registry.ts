@@ -19,7 +19,8 @@ export type SolutionKey =
   | 'hash-table'
   | 'sorting-search'
   | 'graph'
-  | 'regular-expressions';
+  | 'regular-expressions'
+  | 'advanced-regular-expressions';
 
 export const solutionLoaders: Record<SolutionKey, () => Promise<SolutionModule>> = {
   encoding: () => import('./encoding/solution'),
@@ -37,5 +38,6 @@ export const solutionLoaders: Record<SolutionKey, () => Promise<SolutionModule>>
   'hash-table': () => import('./hash-table/solution'),
   'sorting-search': () => import('./sorting-search/solution'),
   'graph': () => import('./graph/solution'),
-  'regular-expressions': () => import('./regular-expressions/solution')
+  'regular-expressions': () => import('./regular-expressions/solution'),
+  'advanced-regular-expressions': () => import('./advanced-regular-expressions/solution')
 };
